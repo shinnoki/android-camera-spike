@@ -29,6 +29,15 @@
             android:name="com.konashi.fashionstamp.ui.UploadActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="com.konashi.fashionstamp.ui.FeedActivity"
+            android:label="@string/title_activity_feed" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
