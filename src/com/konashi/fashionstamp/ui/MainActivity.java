@@ -29,14 +29,6 @@ public class MainActivity extends Activity implements OnClickListener {
     private static final int REQUEST_CROP = 300;
     private static final int REQUEST_UPLOAD = 400;
     
-    private ImageView imgView;
-
-    private ImageView droid_kun;
-    
-    private boolean isFirst = true;
-    private RelativeLayout parent;
-    private int parentX;
-    private int parentY;
     private Uri mSaveUri;
 
     @Override
@@ -44,24 +36,10 @@ public class MainActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //buttonï¿½ï¿½ï¿½æ“¾
         Button btn1 = (Button)findViewById(R.id.button1);
         btn1.setOnClickListener(this);
-        
-        // ï¿½Ê^ï¿½\ï¿½ï¿½ï¿½pImageView
-        imgView = (ImageView)findViewById(R.id.imageView);
-
-        // ï¿½hï¿½ï¿½ï¿½Cï¿½hï¿½N
-        // droid_kun = (ImageView)findViewById(R.id.droid_kun);
-        // droid_kun.setVisibility(View.INVISIBLE);
-
-        parent = (RelativeLayout)findViewById(R.id.rLayout);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT);
-        SampleView sVew = new SampleView(this);
-        parent.addView(sVew, params);
-
+        Button btn2 = (Button)findViewById(R.id.button2);
+        btn2.setOnClickListener(this);
     }
     
     @Override
@@ -77,6 +55,10 @@ public class MainActivity extends Activity implements OnClickListener {
         int id = v.getId();
         if (id == R.id.button1) {
             selectImage();
+        }
+        if (id == R.id.button2) {
+            Intent i = new Intent(this, ItemShowActivity.class);
+            startActivity(i);
         }
     }
 
@@ -115,7 +97,7 @@ public class MainActivity extends Activity implements OnClickListener {
     }
     
     private void selectImage() {
-        String[] items = {"å†™çœŸã‚’æ’®å½±", "å†™çœŸã‚’é¸æŠ"};
+        String[] items = {"å†™çœŸã‚’æ’®ã‚‹", "ç”»åƒã‚’é¸æŠ"};
 
         new AlertDialog.Builder(this).setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
@@ -161,65 +143,15 @@ public class MainActivity extends Activity implements OnClickListener {
         Intent i = new Intent();
 
         Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setData(uri); // ƒgƒŠƒ~ƒ“ƒO‚É“n‚·‰æ‘œƒpƒX
-        intent.putExtra("outputX", 200); // ƒgƒŠƒ~ƒ“ƒOŒã‚Ì‰æ‘œ‚Ì•
-        intent.putExtra("outputY", 200); // ƒgƒŠƒ~ƒ“ƒOŒã‚Ì‰æ‘œ‚Ì‚‚³
-        intent.putExtra("aspectX", 1); // ƒgƒŠƒ~ƒ“ƒOŒã‚Ì‰æ‘œ‚ÌƒAƒXƒyƒNƒg”äiXj
-        intent.putExtra("aspectY", 1); // ƒgƒŠƒ~ƒ“ƒOŒã‚Ì‰æ‘œ‚ÌƒAƒXƒyƒNƒg”äiYj
-        intent.putExtra("scale", true); // ƒgƒŠƒ~ƒ“ƒO’†‚Ì˜g‚ğŠg‘åk¬‚³‚¹‚é‚©
-        intent.putExtra("return-data", true); // ƒgƒŠƒ~ƒ“ƒO‚µ‚½ƒf[ƒ^‚ğ•Ô‚·‚æ
+        intent.setData(uri); // ï¿½gï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½Oï¿½É“nï¿½ï¿½ï¿½æ‘œï¿½pï¿½X
+        intent.putExtra("outputX", 200); // ï¿½gï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½Oï¿½ï¿½Ì‰æ‘œï¿½Ì•ï¿½
+        intent.putExtra("outputY", 200); // ï¿½gï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½Oï¿½ï¿½Ì‰æ‘œï¿½Ìï¿½ï¿½ï¿½
+        intent.putExtra("aspectX", 1); // ï¿½gï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½Oï¿½ï¿½Ì‰æ‘œï¿½ÌƒAï¿½Xï¿½yï¿½Nï¿½gï¿½ï¿½iXï¿½j
+        intent.putExtra("aspectY", 1); // ï¿½gï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½Oï¿½ï¿½Ì‰æ‘œï¿½ÌƒAï¿½Xï¿½yï¿½Nï¿½gï¿½ï¿½iYï¿½j
+        intent.putExtra("scale", true); // ï¿½gï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½Ì˜gï¿½ï¿½ï¿½gï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é‚©
+        intent.putExtra("return-data", true); // ï¿½gï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½ï¿½Ô‚ï¿½ï¿½ï¿½
         startActivityForResult(intent, REQUEST_CROP);
-
     }
     
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        /*
-        int action = event.getAction();
-        int touchX = (int)event.getRawX();
-        int touchY = (int)event.getRawY();
-
-        if (isFirst) {
-            parent = (RelativeLayout)findViewById(R.id.rLayout);
-            int[] location = new int[2];
-            parent.getLocationOnScreen(location);
-            parentX = location[0];
-            parentY = location[1];
-            
-            isFirst = false;
-        }
-
-        if (action == MotionEvent.ACTION_DOWN) {
-            droid_kun = new ImageView(this);
-            droid_kun.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT);
-            parent.addView(droid_kun, params);
-
-            int left = touchX - parentX;
-            int top = touchY - parentY;
-            droid_kun.layout(left, top, left + droid_kun.getWidth(), top + droid_kun.getHeight());
-
-        }
-
-        if (action == MotionEvent.ACTION_MOVE) {
-            int left = touchX - parentX;
-            int top = touchY - parentY;
-            droid_kun.layout(left, top, left + droid_kun.getWidth(), top + droid_kun.getHeight());
-        }
-
-        if (action == MotionEvent.ACTION_UP) {
-            // droid_kun.setVisibility(View.INVISIBLE);
-            
-            // droid_kun = new ImageView(this);
-            // droid_kun.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-            // flLayout.addView(droid_kun);
-        }
-    */
-
-        return super.onTouchEvent(event);
-    }
-
 
 }

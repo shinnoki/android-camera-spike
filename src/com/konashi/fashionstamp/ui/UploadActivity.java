@@ -1,7 +1,9 @@
 package com.konashi.fashionstamp.ui;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
+import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -23,6 +25,7 @@ import com.konashi.fashionstamp.ui.helper.UploadAsyncTask;
 public class UploadActivity extends Activity implements OnClickListener {
     private ImageView imgView;
     private EditText titleEdit;
+    private EditText descriptionEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +34,11 @@ public class UploadActivity extends Activity implements OnClickListener {
 
         imgView = (ImageView)findViewById(R.id.imageView1);
         titleEdit = (EditText)findViewById(R.id.editText1);
+        descriptionEdit = (EditText)findViewById(R.id.editText2);
 
         Button upButton = (Button)findViewById(R.id.button1);
         upButton.setOnClickListener(this);
 
-        // 写真を表示
         Intent i = getIntent();
         Bitmap img = (Bitmap)i.getParcelableExtra("image");
         imgView.setImageBitmap(img);
@@ -51,16 +54,15 @@ public class UploadActivity extends Activity implements OnClickListener {
     
     private void postItem() {
         try {
-            MultipartEntity entity = new MultipartEntity();
+            MultipartEntity entity = new MultipartEntity() ;
 
-            // 送信する内容をentityに追加
             ByteArrayBody imgBody = ImageHelper.image2byteArrayBody(this.imgView);
             entity.addPart("item[image]", imgBody);
 
-            StringBody titleBody = new StringBody(titleEdit.getText().toString());
+            StringBody titleBody = new StringBody(titleEdit.getText().toString(), Charset.forName("UTF-8"));
             entity.addPart("item[title]", titleBody);
             
-            StringBody descriptionBody = new StringBody("description");
+            StringBody descriptionBody = new StringBody(descriptionEdit.getText().toString(), Charset.forName("UTF-8"));
             entity.addPart("item[description]", descriptionBody);
         
             new UploadAsyncTask(this).execute(entity);

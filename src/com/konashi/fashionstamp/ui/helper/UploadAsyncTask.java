@@ -8,6 +8,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -36,7 +37,6 @@ extends AsyncTask<MultipartEntity, Integer, String> {
         try {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(POST_URL);
-
 
             httpPost.setEntity(params[0]);
             HttpResponse response = httpClient.execute(httpPost);
@@ -70,7 +70,7 @@ extends AsyncTask<MultipartEntity, Integer, String> {
         
         
         try {
-            // jsonÇÃÉpÅ[ÉX
+            // jsonÔøΩÃÉpÔøΩ[ÔøΩX
             JSONObject jsonObj = new JSONObject(result);
             String id = jsonObj.getString("id");
             String created_at = jsonObj.getString("created_at");
@@ -79,7 +79,7 @@ extends AsyncTask<MultipartEntity, Integer, String> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // TODO: dbÇ…ï€ë∂
+        // TODO: dbÔøΩ…ï€ëÔøΩ
 
     }
 
