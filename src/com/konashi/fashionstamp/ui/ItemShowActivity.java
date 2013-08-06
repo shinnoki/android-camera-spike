@@ -1,6 +1,7 @@
 package com.konashi.fashionstamp.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -9,10 +10,19 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.android.volley.toolbox.Volley;
 import com.example.camerastamp.R;
+import com.konashi.fashionstamp.ui.helper.BitmapCache;
 
 public class ItemShowActivity extends Activity implements OnTouchListener {
+
     private RelativeLayout mLayout;
+    private RequestQueue mQueue;
+    private ImageLoader mImageLoader;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,12 +31,24 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
         mLayout = (RelativeLayout)this.findViewById(R.id.rLayout);
         mLayout.setOnTouchListener(this);
         
-        ImageView itemImg = new ImageView(this);
-        itemImg.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
-        mLayout.addView(itemImg, params);
+        mQueue = Volley.newRequestQueue(this);
+        mImageLoader = new ImageLoader(mQueue, new BitmapCache());
+
+        Intent intent = getIntent();
+        int id = intent.getIntExtra("id", -1);
+         
+        if (id >= 0) {
+            // get http://still-ocean-5133.herokuapp.com/items/:id.json
+            
+            // parse "url"
+            
+             // Load image
+            ImageView itemImg = (ImageView)findViewById(R.id.itemImageView);
+
+            String url = "http://res.cloudinary.com/hcttyxbgd/image/upload/v1375784060/utqhnbxxblzgdbzjkwpc.jpg";
+            ImageListener listener = ImageLoader.getImageListener(itemImg, R.drawable.ic_launcher, android.R.drawable.ic_delete);
+            mImageLoader.get(url, listener);
+        }
     }
 
     @Override

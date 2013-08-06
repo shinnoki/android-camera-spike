@@ -53,6 +53,9 @@ public class MainActivity extends Activity implements OnClickListener {
         }
         if (id == R.id.button2) {
             Intent intent = new Intent(this, ItemShowActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", 21);
+            intent.putExtras(bundle);
             startActivity(intent);
         }
     }
@@ -105,7 +108,6 @@ public class MainActivity extends Activity implements OnClickListener {
             }
         })
         .show();
-
     }
 
     private void wakeUpCamera(){
@@ -135,17 +137,17 @@ public class MainActivity extends Activity implements OnClickListener {
     }
     
     private void wakeUpCrop(Uri uri) {
-
         Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setData(uri); // �g���~���O�ɓn���摜�p�X
-        intent.putExtra("outputX", 200); // �g���~���O��̉摜�̕�
-        intent.putExtra("outputY", 200); // �g���~���O��̉摜�̍���
-        intent.putExtra("aspectX", 1); // �g���~���O��̉摜�̃A�X�y�N�g��iX�j
-        intent.putExtra("aspectY", 1); // �g���~���O��̉摜�̃A�X�y�N�g��iY�j
-        intent.putExtra("scale", true); // �g���~���O���̘g���g��k�������邩
-        intent.putExtra("return-data", true); // �g���~���O�����f�[�^��Ԃ���
+        
+        // Crop to 200 * 200
+        intent.putExtra("outputX", 200);
+        intent.putExtra("outputY", 200);
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("scale", true);
+        intent.putExtra("return-data", true);
+       
+        intent.setData(uri);
         startActivityForResult(intent, REQUEST_CROP);
     }
-    
-
 }
