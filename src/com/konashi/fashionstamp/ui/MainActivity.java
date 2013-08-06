@@ -1,13 +1,13 @@
 package com.konashi.fashionstamp.ui;
 
-import java.io.InputStream;
-
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -21,16 +21,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.example.camerastamp.R;
-import com.konashi.fashionstamp.ui.helper.ImageHelper;
 import com.konashi.fashionstamp.view.SampleView;
 
 public class MainActivity extends Activity implements OnClickListener {
     private static final int REQUEST_GALLERY = 100;
     private static final int REQUEST_CAMERA = 200;
-    private static final int REQUEST_UPLOAD = 300;
+    private static final int REQUEST_CROP = 300;
+    private static final int REQUEST_UPLOAD = 400;
     
-    private static final String POST_URL = "";
-
     private ImageView imgView;
 
     private ImageView droid_kun;
@@ -39,6 +37,7 @@ public class MainActivity extends Activity implements OnClickListener {
     private RelativeLayout parent;
     private int parentX;
     private int parentY;
+    private Uri mSaveUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,37 +85,24 @@ public class MainActivity extends Activity implements OnClickListener {
         if (resultCode != RESULT_OK) return;
 
         if (requestCode == REQUEST_CAMERA) {
-            try {
-                Bitmap img = (Bitmap)data.getExtras().get("data");
-                img = ImageHelper.resize(img, 300, 300);
-                
-                Bundle b = new Bundle();
-                b.putParcelable("image", img);
-                Intent i = new Intent(this, UploadActivity.class);
-                i.putExtras(b);
-                startActivityForResult(i, REQUEST_UPLOAD);
-            } catch (Exception e) {
-
-            }
-
+            wakeUpCrop(mSaveUri);
         }
 
         if (requestCode == REQUEST_GALLERY) {
-            try {
-                InputStream is = getContentResolver().openInputStream(data.getData());
-                Bitmap img = BitmapFactory.decodeStream(is);
-                is.close();
+            wakeUpCrop(data.getData());
+        }
+        
+        if (requestCode == REQUEST_CROP) {
+            Bundle ext = data.getExtras();
 
-                img = ImageHelper.resize(img, 300, 300);
+            if (ext != null) {
+                Bitmap img = ext.getParcelable("data");
 
+                Intent i = new Intent(this, UploadActivity.class);
                 Bundle b = new Bundle();
                 b.putParcelable("image", img);
-                Intent i = new Intent(this, UploadActivity.class);
                 i.putExtras(b);
                 startActivityForResult(i, REQUEST_UPLOAD);
-
-            } catch (Exception e) {
-
             }
         }
         
@@ -146,9 +132,22 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private void wakeUpCamera(){
-        Intent i = new Intent();
-        i.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(i, REQUEST_CAMERA);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(System.currentTimeMillis());
+        stringBuilder.append(".jpg");
+ 
+        String fileName = stringBuilder.toString();
+ 
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, fileName);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        ContentResolver contentResolver = getContentResolver();
+        mSaveUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+ 
+        Intent intent = new Intent();
+        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);
+        startActivityForResult(intent, REQUEST_CAMERA);
     }
 
     private void wakeUpGallery() {
@@ -156,6 +155,21 @@ public class MainActivity extends Activity implements OnClickListener {
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(i, REQUEST_GALLERY);
+    }
+    
+    private void wakeUpCrop(Uri uri) {
+        Intent i = new Intent();
+
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setData(uri); // トリミングに渡す画像パス
+        intent.putExtra("outputX", 200); // トリミング後の画像の幅
+        intent.putExtra("outputY", 200); // トリミング後の画像の高さ
+        intent.putExtra("aspectX", 1); // トリミング後の画像のアスペクト比（X）
+        intent.putExtra("aspectY", 1); // トリミング後の画像のアスペクト比（Y）
+        intent.putExtra("scale", true); // トリミング中の枠を拡大縮小させるか
+        intent.putExtra("return-data", true); // トリミングしたデータを返すよ
+        startActivityForResult(intent, REQUEST_CROP);
+
     }
     
     @Override
