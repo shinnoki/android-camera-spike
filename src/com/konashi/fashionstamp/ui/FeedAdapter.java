@@ -19,8 +19,4 @@ public class FeedAdapter extends ArrayAdapter<Item> {
 		super(context, 0, feed);
 	}
 
-	@Override
-	public void getView(){
-		
-	}
 }
