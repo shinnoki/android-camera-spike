@@ -8,7 +8,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -70,16 +69,16 @@ extends AsyncTask<MultipartEntity, Integer, String> {
         
         
         try {
-            // json�̃p�[�X
+            // Parse json object
             JSONObject jsonObj = new JSONObject(result);
             String id = jsonObj.getString("id");
-            String created_at = jsonObj.getString("created_at");
+            // String created_at = jsonObj.getString("created_at");
             
             Log.d("response id", id);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // TODO: db�ɕۑ�
+        // TODO: Save to db
 
     }
 

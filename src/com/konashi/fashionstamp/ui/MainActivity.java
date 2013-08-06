@@ -12,16 +12,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.example.camerastamp.R;
-import com.konashi.fashionstamp.view.SampleView;
 
 public class MainActivity extends Activity implements OnClickListener {
     private static final int REQUEST_GALLERY = 100;
@@ -57,8 +52,8 @@ public class MainActivity extends Activity implements OnClickListener {
             selectImage();
         }
         if (id == R.id.button2) {
-            Intent i = new Intent(this, ItemShowActivity.class);
-            startActivity(i);
+            Intent intent = new Intent(this, ItemShowActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -80,11 +75,11 @@ public class MainActivity extends Activity implements OnClickListener {
             if (ext != null) {
                 Bitmap img = ext.getParcelable("data");
 
-                Intent i = new Intent(this, UploadActivity.class);
-                Bundle b = new Bundle();
-                b.putParcelable("image", img);
-                i.putExtras(b);
-                startActivityForResult(i, REQUEST_UPLOAD);
+                Intent intent = new Intent(this, UploadActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("image", img);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, REQUEST_UPLOAD);
             }
         }
         
@@ -133,14 +128,13 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private void wakeUpGallery() {
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(i, REQUEST_GALLERY);
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, REQUEST_GALLERY);
     }
     
     private void wakeUpCrop(Uri uri) {
-        Intent i = new Intent();
 
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setData(uri); // �g���~���O�ɓn���摜�p�X

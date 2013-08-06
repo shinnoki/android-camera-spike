@@ -3,7 +3,6 @@ package com.konashi.fashionstamp.ui;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
-import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
