@@ -1,11 +1,12 @@
 package com.konashi.fashionstamp.ui;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.konashi.fashionstamp.entity.Item;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
+
+import com.konashi.fashionstamp.entity.Item;
 
 public class FeedAdapter extends ArrayAdapter<Item> {
 
@@ -14,4 +15,12 @@ public class FeedAdapter extends ArrayAdapter<Item> {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
+	public FeedAdapter(Context context, ArrayList<Item> feed) {
+		super(context, 0, feed);
+	}
+
+	@Override
+	public void getView(){
+		
+	}
 }
