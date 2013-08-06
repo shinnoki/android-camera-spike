@@ -64,7 +64,8 @@ public class UploadActivity extends Activity implements OnClickListener {
             StringBody descriptionBody = new StringBody(descriptionEdit.getText().toString(), Charset.forName("UTF-8"));
             entity.addPart("item[description]", descriptionBody);
         
-            new UploadAsyncTask(this).execute(entity);
+            String url = "http://still-ocean-5133.herokuapp.com/items.json";
+            new UploadAsyncTask(this, url).execute(entity);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

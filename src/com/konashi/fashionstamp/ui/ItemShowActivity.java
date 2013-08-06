@@ -1,8 +1,16 @@
 package com.konashi.fashionstamp.ui;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.StringBody;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +24,8 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.android.volley.toolbox.Volley;
 import com.example.camerastamp.R;
 import com.konashi.fashionstamp.ui.helper.BitmapCache;
+import com.konashi.fashionstamp.ui.helper.ImageHelper;
+import com.konashi.fashionstamp.ui.helper.UploadAsyncTask;
 
 public class ItemShowActivity extends Activity implements OnTouchListener {
 
@@ -65,14 +75,41 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
         int touchY = (int)event.getY();
 
         if (action == MotionEvent.ACTION_DOWN) {
-            ImageView itemImg = new ImageView(this);
-            itemImg.setImageDrawable(getResources().getDrawable(R.drawable.ecalic019_088));
+            View view = this.getLayoutInflater().inflate(R.layout.test, null);
+
+            // ImageView itemImg = new ImageView(this);
+            // itemImg.setImageDrawable(getResources().getDrawable(R.drawable.ecalic019_088));
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.leftMargin = touchX;
             params.topMargin = touchY;
-            mLayout.addView(itemImg, params);
+            mLayout.addView(view, params);
+            
+            /*
+            float x = (float)100 * touchX/mLayout.getWidth();
+            float y = (float)100 * touchY/mLayout.getHeight();
+            Log.d("comment", "x="+x+", y="+y);
+            try {
+
+                MultipartEntity entity = new MultipartEntity() ;
+
+                entity.addPart("comment[stamp]", new StringBody("1"));
+                entity.addPart("comment[x]", new StringBody(Float.toString(x)));
+                entity.addPart("comment[y]", new StringBody(Float.toString(y)));
+                entity.addPart("comment[item_id]", new StringBody("21"));
+
+                StringBody descriptionBody = new StringBody("コメント", Charset.forName("UTF-8"));
+                entity.addPart("comment[body]", descriptionBody);
+
+                String url = "http://still-ocean-5133.herokuapp.com/comments.json";
+                new UploadAsyncTask(this, url).execute(entity);
+
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            */
+        
         }
 
         return false;
