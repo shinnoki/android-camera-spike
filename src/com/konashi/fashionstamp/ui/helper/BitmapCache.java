@@ -1,5 +1,8 @@
 package com.konashi.fashionstamp.ui.helper;
 
+/**
+ * http://dev.classmethod.jp/smartphone/android/android-tips-51-volley/
+ */
 
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
