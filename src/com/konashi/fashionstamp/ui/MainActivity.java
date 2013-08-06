@@ -45,14 +45,14 @@ public class MainActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //button‚ğæ“¾
+        //buttonï¿½ï¿½ï¿½æ“¾
         Button btn1 = (Button)findViewById(R.id.button1);
         btn1.setOnClickListener(this);
         
-        // Ê^•\¦—pImageView
+        // ï¿½Ê^ï¿½\ï¿½ï¿½ï¿½pImageView
         imgView = (ImageView)findViewById(R.id.imageView);
 
-        // ƒhƒƒCƒhŒN
+        // ï¿½hï¿½ï¿½ï¿½Cï¿½hï¿½N
         // droid_kun = (ImageView)findViewById(R.id.droid_kun);
         // droid_kun.setVisibility(View.INVISIBLE);
 
@@ -129,7 +129,7 @@ public class MainActivity extends Activity implements OnClickListener {
     }
     
     private void selectImage() {
-        String[] items = {"Ê^‚ğ‚Æ‚é", "‰æ‘œ‚ğ‘I‘ğ"};
+        String[] items = {"å†™çœŸã‚’æ’®å½±", "å†™çœŸã‚’é¸æŠ"};
 
         new AlertDialog.Builder(this).setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
