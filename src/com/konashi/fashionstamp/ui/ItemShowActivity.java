@@ -2,36 +2,38 @@ package com.konashi.fashionstamp.ui;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.example.camerastamp.R;
+import com.konashi.fashionstamp.entity.Comment;
+import com.konashi.fashionstamp.entity.Item;
 import com.konashi.fashionstamp.ui.helper.BitmapCache;
 import com.konashi.fashionstamp.ui.helper.UploadAsyncTask;
-import com.konashi.fashionstamp.view.CommentView;
 
 public class ItemShowActivity extends Activity implements OnTouchListener {
 
     private RelativeLayout mLayout;
     private RequestQueue mQueue;
-    private ImageLoader mImageLoader;
+    private Item mItem;
+    private int mItemId;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,23 +44,47 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
         mLayout.setOnTouchListener(this);
         
         mQueue = Volley.newRequestQueue(this);
-        mImageLoader = new ImageLoader(mQueue, new BitmapCache());
 
         Intent intent = getIntent();
-        int id = intent.getIntExtra("id", -1);
-         
-        if (id >= 0) {
-            // get http://still-ocean-5133.herokuapp.com/items/:id.json
-            
-            // parse "url"
-            
+        mItem = (Item)intent.getSerializableExtra("item");
+        
+        if (mItem != null) {
+            mItemId = mItem.getId();
              // Load image
-            ImageView itemImg = (ImageView)findViewById(R.id.itemImageView);
-
-            String url = "http://res.cloudinary.com/hcttyxbgd/image/upload/v1375784060/utqhnbxxblzgdbzjkwpc.jpg";
-            ImageListener listener = ImageLoader.getImageListener(itemImg, R.drawable.ic_launcher, android.R.drawable.ic_delete);
-            mImageLoader.get(url, listener);
+            String url = mItem.getImage();
+            NetworkImageView itemImg = (NetworkImageView)findViewById(R.id.itemImageView);
+            itemImg.setImageUrl(url, new ImageLoader(mQueue, new BitmapCache()));
+            
         }
+    }
+    
+    private void drawComments(List<Comment> comments) {
+        for (Comment comment : comments) {
+            View view = this.getLayoutInflater().inflate(R.layout.comment, null);
+            
+            TextView textView = (TextView)view.findViewById(R.id.body);
+            textView.setText(comment.getBody());
+
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            
+            float x = comment.getX() * mLayout.getWidth() / 100;
+            float y = comment.getY() * mLayout.getHeight() / 100;
+            params.leftMargin = (int)x;
+            params.topMargin = (int)y;
+            mLayout.addView(view, params);
+            
+        }
+        
+    }
+    
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        // TODO 自動生成されたメソッド・スタブ
+        super.onWindowFocusChanged(hasFocus);
+        
+        drawComments(mItem.getComments());
     }
 
     @Override
@@ -82,7 +108,6 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
             params.topMargin = touchY;
             mLayout.addView(view, params);
             
-            /*
             float x = (float)100 * touchX/mLayout.getWidth();
             float y = (float)100 * touchY/mLayout.getHeight();
             Log.d("comment", "x="+x+", y="+y);
@@ -93,7 +118,7 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
                 entity.addPart("comment[stamp]", new StringBody("1"));
                 entity.addPart("comment[x]", new StringBody(Float.toString(x)));
                 entity.addPart("comment[y]", new StringBody(Float.toString(y)));
-                entity.addPart("comment[item_id]", new StringBody("21"));
+                entity.addPart("comment[item_id]", new StringBody(mItemId));
 
                 StringBody descriptionBody = new StringBody("コメント", Charset.forName("UTF-8"));
                 entity.addPart("comment[body]", descriptionBody);
@@ -104,8 +129,6 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            */
-        
         }
 
         return false;

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Item implements Serializable {
 	
-	private ArrayList<Comment> comments;
+    private ArrayList<Comment> comments;
     private String image;
     private String createdAt;
     private String title;

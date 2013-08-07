@@ -20,8 +20,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.camerastamp.R;
-import com.example.camerastamp.model.Feed;
 import com.konashi.fashionstamp.entity.Item;
+import com.konashi.fashionstamp.model.Feed;
 
 
 public class BaseFeedFragment extends Fragment {

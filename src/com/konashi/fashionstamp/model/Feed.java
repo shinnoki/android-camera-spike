@@ -1,4 +1,4 @@
-package com.example.camerastamp.model;
+package com.konashi.fashionstamp.model;
 
 /*
  * タイムラインに表示する情報（Feed）のデータを扱うモデル

@@ -1,6 +1,8 @@
 package com.konashi.fashionstamp.entity;
 
-public class Comment {
+import java.io.Serializable;
+
+public class Comment implements Serializable {
 	private String body;
     private int stamp;
     private String createdAt;

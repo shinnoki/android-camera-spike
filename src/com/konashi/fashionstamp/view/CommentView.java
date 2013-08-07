@@ -1,12 +1,11 @@
 package com.konashi.fashionstamp.view;
 
-import com.example.camerastamp.R;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+
+import com.example.camerastamp.R;
 
 public class CommentView extends FrameLayout {
     public CommentView(Context context) {
