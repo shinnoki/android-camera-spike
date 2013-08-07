@@ -1,16 +1,30 @@
 package com.konashi.fashionstamp.entity;
 
 public class Comment {
-    private String comment;
+	private String body;
+    private int stamp;
+    private String createdAt;
     private float x;
     private float y;
 
-    public String getComment() {
-        return comment;
-    }
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
+    public String getBody() {
+		return body;
+	}
+	public void setBody(String body) {
+		this.body = body;
+	}
+	public int getStamp() {
+		return stamp;
+	}
+	public void setStamp(int stamp) {
+		this.stamp = stamp;
+	}
+	public String getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
+	}
     public float getX() {
         return x;
     }

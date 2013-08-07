@@ -4,11 +4,14 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.android.volley.RequestQueue;
@@ -25,6 +28,7 @@ public class BaseFeedFragment extends Fragment {
 	
 	protected RequestQueue mQueue;
 	protected Feed mFeed;
+	protected ArrayList<Item> mFeedList;
 	protected FeedAdapter mAdapter;
 	protected ListView mListView;
 	
@@ -38,13 +42,25 @@ public class BaseFeedFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 		
 		mFeed = new Feed();
+		mFeedList = new ArrayList<Item>();
 		
 		mQueue = Volley.newRequestQueue(getActivity());
 		JsonArrayRequest req = new JsonArrayRequest("http://still-ocean-5133.herokuapp.com/items.json",
 	            new Response.Listener<JSONArray>() {
 	                @Override public void onResponse(JSONArray response) {
-	                    ArrayList<Item> feed = mFeed.parseFeedJson(response);
-	                    FeedAdapter mAdapter = new FeedAdapter(getActivity(), feed);
+	                    mFeedList.addAll(mFeed.parseFeedJson(response));
+	                    FeedAdapter mAdapter = new FeedAdapter(getActivity(), mFeedList);
+	                    mListView.setAdapter(mAdapter);
+	                    mListView.setOnItemClickListener(new OnItemClickListener() {
+
+							@Override
+							public void onItemClick(AdapterView<?> arg0,
+									View arg1, int position, long id) {
+								Intent intent = new Intent(getActivity(), ItemShowActivity.class);
+								intent.putExtra("item", mFeedList.get(position));
+								startActivity(intent);
+							}
+						});
 	                }
 	            },
 	            new Response.ErrorListener() {
@@ -62,4 +78,5 @@ public class BaseFeedFragment extends Fragment {
 		return view;
 	}
 
+	
 }
