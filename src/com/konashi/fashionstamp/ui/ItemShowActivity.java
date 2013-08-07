@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 
-import android.R.integer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,7 +32,6 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
     private RelativeLayout mLayout;
     private RequestQueue mQueue;
     private Item mItem;
-    private int mItemId;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +47,6 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
         mItem = (Item)intent.getSerializableExtra("item");
         
         if (mItem != null) {
-            mItemId = mItem.getId();
              // Load image
             String url = mItem.getImage();
             NetworkImageView itemImg = (NetworkImageView)findViewById(R.id.itemImageView);
@@ -118,7 +115,7 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
                 entity.addPart("comment[stamp]", new StringBody("1"));
                 entity.addPart("comment[x]", new StringBody(Float.toString(x)));
                 entity.addPart("comment[y]", new StringBody(Float.toString(y)));
-                entity.addPart("comment[item_id]", new StringBody(mItemId));
+                entity.addPart("comment[item_id]", new StringBody(Integer.toString(mItem.getId())));
 
                 StringBody descriptionBody = new StringBody("コメント", Charset.forName("UTF-8"));
                 entity.addPart("comment[body]", descriptionBody);
