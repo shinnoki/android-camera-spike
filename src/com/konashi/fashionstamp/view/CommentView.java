@@ -11,7 +11,7 @@ public class CommentView extends FrameLayout {
     public CommentView(Context context) {
         super(context);
         LayoutInflater inflator = LayoutInflater.from(context);
-        View layout = inflator.inflate(R.layout.comment, null);
+        View layout = inflator.inflate(R.layout.comment_edit, null);
         this.addView(layout);
     }
 

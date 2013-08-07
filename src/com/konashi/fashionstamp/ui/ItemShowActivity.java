@@ -9,12 +9,16 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -100,42 +104,66 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
 
         if (action == MotionEvent.ACTION_DOWN) {
             // View commentView = new CommentView(this);
-            View view = this.getLayoutInflater().inflate(R.layout.comment, null);
+            View commentEdit = this.getLayoutInflater().inflate(R.layout.comment_edit, null);
             
-            // textを書き換える
-            TextView textView = (TextView)view.findViewById(R.id.body);
-            textView.setText("text");
-
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.leftMargin = touchX;
             params.topMargin = touchY;
-            mLayout.addView(view, params);
+            mLayout.addView(commentEdit, params);
+
+            EditText editText = (EditText)commentEdit.findViewById(R.id.editBody);
+
+            // Move focus to edit text and open softkeyboard
+            editText.requestFocus();
+            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);  
+            inputMethodManager.showSoftInput(editText, 0);  
             
-            float x = (float)100 * touchX/mLayout.getWidth();
-            float y = (float)100 * touchY/mLayout.getHeight();
-            Log.d("comment", "x="+x+", y="+y);
-            try {
-
-                MultipartEntity entity = new MultipartEntity() ;
-
-                entity.addPart("comment[stamp]", new StringBody("1"));
-                entity.addPart("comment[x]", new StringBody(Float.toString(x)));
-                entity.addPart("comment[y]", new StringBody(Float.toString(y)));
-                entity.addPart("comment[item_id]", new StringBody(Integer.toString(mItem.getId())));
-
-                StringBody descriptionBody = new StringBody("コメント", Charset.forName("UTF-8"));
-                entity.addPart("comment[body]", descriptionBody);
-
-                String url = "http://still-ocean-5133.herokuapp.com/comments.json";
-                new UploadAsyncTask(this, url).execute(entity);
-
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            // Set event when input finished
+            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if(event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                        if(event.getAction() == KeyEvent.ACTION_UP) {
+                            // close softkeyboard
+                            ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        }
+                        return true;
+                    }
+                    return false;
+                }
+            });
+         
         }
 
         return false;
+    }
+    
+    private void submitComment(int stamp, float x, float y, String body) {
+        try {
+            MultipartEntity entity = new MultipartEntity() ;
+
+            entity.addPart("comment[item_id]", new StringBody(Integer.toString(mItem.getId())));
+            entity.addPart("comment[stamp]", new StringBody(Integer.toString(stamp)));
+            entity.addPart("comment[x]", new StringBody(Float.toString(x)));
+            entity.addPart("comment[y]", new StringBody(Float.toString(y)));
+
+            StringBody commentBody = new StringBody(body, Charset.forName("UTF-8"));
+            entity.addPart("comment[body]", commentBody);
+
+            String url = "http://still-ocean-5133.herokuapp.com/comments.json";
+            new UploadAsyncTask(this, url).execute(entity);
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+    }
+    
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.swipe_in_right, R.anim.swipe_out_right);
     }
 }

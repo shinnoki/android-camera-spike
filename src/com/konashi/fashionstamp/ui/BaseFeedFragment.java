@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -56,7 +57,12 @@ public class BaseFeedFragment extends Fragment {
 									View arg1, int position, long id) {
 								Intent intent = new Intent(getActivity(), ItemShowActivity.class);
 								intent.putExtra("item", mFeedList.get(position));
-								startActivity(intent);
+								// startActivity(intent);
+								
+								// animation
+								ActivityOptions animation = ActivityOptions.makeCustomAnimation(getActivity(),
+								        R.anim.swipe_in_left, R.anim.swipe_out_left);
+								getActivity().startActivity(intent, animation.toBundle());
 							}
 						});
 	                }
