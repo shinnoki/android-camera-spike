@@ -1,3 +1,6 @@
 [submodule "volley"]
 	path = volley
 	url = http://android.googlesource.com/platform/frameworks/volley
+[submodule "Android-PullToRefresh"]
+	path = Android-PullToRefresh
+	url = https://github.com/chrisbanes/Android-PullToRefresh.git

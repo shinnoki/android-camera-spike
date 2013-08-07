@@ -1,30 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="タイトル"
-        android:textSize="15sp" />
-
-    <com.android.volley.toolbox.NetworkImageView
+    <com.konashi.fashionstamp.ui.helper.FadeInNetworkImageView
         android:id="@+id/thumbnail"
         android:layout_width="fill_parent"
         android:layout_height="150dp"
         android:background="#f2f2f2"
+        android:scaleType="centerCrop"
         android:src="@android:drawable/arrow_up_float" />
 
-    <TextView
-        android:id="@+id/description"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="お気に入りのほにゃららほげほげふーふー！" />
+        android:orientation="vertical"
+        android:background="#22222266"
+        android:layout_gravity="bottom" >
 
-    <LinearLayout
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:text="タイトル"
+            android:textColor="#f2f2f2"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:text="タイトル"
+            android:textColor="#aaa"
+            android:textSize="13sp" />
+    </LinearLayout>
+    <!--
+         <LinearLayout
         android:id="@+id/comment_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,5 +85,6 @@
             android:layout_height="wrap_content"
             android:text="11"/>
     </LinearLayout>
+    -->
 
-</LinearLayout>
+</FrameLayout>
