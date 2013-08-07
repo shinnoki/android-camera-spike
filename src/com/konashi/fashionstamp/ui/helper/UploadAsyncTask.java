@@ -21,13 +21,14 @@ import android.util.Log;
 
 public class UploadAsyncTask 
 extends AsyncTask<MultipartEntity, Integer, String> {
-    private static final String POST_URL = "http://still-ocean-5133.herokuapp.com/items.json";
 
     ProgressDialog dialog;
     Context context;
+    String mUrl;
 
-    public UploadAsyncTask(Context context){
+    public UploadAsyncTask(Context context, String url){
         this.context = context;
+        this.mUrl = url;
     }
 
     @Override
@@ -35,7 +36,7 @@ extends AsyncTask<MultipartEntity, Integer, String> {
 
         try {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(POST_URL);
+            HttpPost httpPost = new HttpPost(mUrl);
 
             httpPost.setEntity(params[0]);
             HttpResponse response = httpClient.execute(httpPost);
