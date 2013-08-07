@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,7 +28,6 @@ import com.konashi.fashionstamp.model.Feed;
 public class BaseFeedFragment extends Fragment {
 	
 	protected RequestQueue mQueue;
-	protected Feed mFeed;
 	protected ArrayList<Item> mFeedList;
 	protected FeedAdapter mAdapter;
 	protected ListView mListView;
@@ -41,7 +41,6 @@ public class BaseFeedFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		mFeed = new Feed();
 		mFeedList = new ArrayList<Item>();
 		
 		fetchFeed();
@@ -52,7 +51,7 @@ public class BaseFeedFragment extends Fragment {
 		JsonArrayRequest req = new JsonArrayRequest("http://still-ocean-5133.herokuapp.com/items.json",
 	            new Response.Listener<JSONArray>() {
 	                @Override public void onResponse(JSONArray response) {
-	                    mFeedList.addAll(mFeed.parseFeedJson(response));
+	                    mFeedList.addAll(Feed.parseFeedJson(response));
 	                    FeedAdapter mAdapter = new FeedAdapter(getActivity(), mFeedList);
 	                    mListView.setAdapter(mAdapter);
 	                    mListView.setOnItemClickListener(new OnItemClickListener() {
@@ -62,7 +61,12 @@ public class BaseFeedFragment extends Fragment {
 									View arg1, int position, long id) {
 								Intent intent = new Intent(getActivity(), ItemShowActivity.class);
 								intent.putExtra("item", mFeedList.get(position));
-								startActivity(intent);
+								// startActivity(intent);
+								
+								// animation
+								ActivityOptions animation = ActivityOptions.makeCustomAnimation(getActivity(),
+								        R.anim.swipe_in_left, R.anim.swipe_out_left);
+								getActivity().startActivity(intent, animation.toBundle());
 							}
 						});
 	                }

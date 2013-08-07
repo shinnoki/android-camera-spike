@@ -17,7 +17,7 @@ import com.konashi.fashionstamp.entity.Item;
 
 public class Feed {
 	
-	public Item parseItem(JSONObject obj){
+	public static Item parseItem(JSONObject obj){
 		Item item = new Item();
 		try {
 			item.setId(obj.getInt("id"));
@@ -33,7 +33,7 @@ public class Feed {
 		return item;
 	}
 	
-	public ArrayList<Item> parseFeedJson(JSONArray response){
+	public static ArrayList<Item> parseFeedJson(JSONArray response){
 		ArrayList<Item> feed = new ArrayList<Item>();
 		for(int i = 0; i < response.length(); i++){
 			Item item = new Item();
@@ -48,7 +48,7 @@ public class Feed {
 		return feed;
 	}
 	
-	private ArrayList<Comment> parseComments(JSONArray comment_arr){
+	private static ArrayList<Comment> parseComments(JSONArray comment_arr){
 		ArrayList<Comment> comments = new ArrayList<Comment>();
 		
 		for(int i = 0; i < comment_arr.length(); i++){
