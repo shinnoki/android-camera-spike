@@ -44,6 +44,10 @@ public class BaseFeedFragment extends Fragment {
 		mFeed = new Feed();
 		mFeedList = new ArrayList<Item>();
 		
+		fetchFeed();
+	}
+
+	public void fetchFeed(){
 		mQueue = Volley.newRequestQueue(getActivity());
 		JsonArrayRequest req = new JsonArrayRequest("http://still-ocean-5133.herokuapp.com/items.json",
 	            new Response.Listener<JSONArray>() {
@@ -70,7 +74,7 @@ public class BaseFeedFragment extends Fragment {
 	            });
 		mQueue.add(req);
 	}
-
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.feed_list, null);

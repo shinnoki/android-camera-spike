@@ -1,5 +1,6 @@
 package com.konashi.fashionstamp.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,7 +28,7 @@ public class MainActivity extends Activity implements OnClickListener {
     
     private Uri mSaveUri;
 
-    @Override
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -97,17 +99,6 @@ public class MainActivity extends Activity implements OnClickListener {
     private void selectImage() {
         String[] items = {"写真を撮る", "画像を選択"};
 
-        new AlertDialog.Builder(this).setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                if (item == 0) {
-                    wakeUpCamera();
-                }
-                if (item == 1) {
-                    wakeUpGallery();
-                }
-            }
-        })
-        .show();
     }
 
     private void wakeUpCamera(){
