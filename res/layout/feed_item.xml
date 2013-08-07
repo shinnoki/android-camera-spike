@@ -11,7 +11,7 @@
         android:text="タイトル"
         android:textSize="15sp" />
 
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/thumbnail"
         android:layout_width="fill_parent"
         android:layout_height="150dp"

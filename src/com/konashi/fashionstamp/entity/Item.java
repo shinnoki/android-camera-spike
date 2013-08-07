@@ -1,18 +1,21 @@
 package com.konashi.fashionstamp.entity;
 
-public class Item {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class Item implements Serializable {
 	
-	private String comment;
+	private ArrayList<Comment> comments;
     private String image;
     private String createdAt;
     private String title;
     private String description;
     
-    public String getComment() {
-		return comment;
+    public ArrayList<Comment> getComments() {
+		return comments;
 	}
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setComments(ArrayList<Comment> comments) {
+		this.comments = comments;
 	}
 	public String getImage() {
 		return image;
