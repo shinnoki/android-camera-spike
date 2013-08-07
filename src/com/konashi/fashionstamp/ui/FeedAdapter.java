@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.example.camerastamp.R;
 import com.konashi.fashionstamp.entity.Item;
 import com.konashi.fashionstamp.ui.helper.BitmapCache;
+import com.konashi.fashionstamp.ui.helper.FadeInNetworkImageView;
 
 public class FeedAdapter extends ArrayAdapter<Item> {
     private LayoutInflater mLayoutInflator;
@@ -42,7 +42,7 @@ public class FeedAdapter extends ArrayAdapter<Item> {
             holder = new ViewHolder();
             holder.titleTextView = (TextView)view.findViewById(R.id.title);
             holder.descriptionTextView = (TextView)view.findViewById(R.id.description);
-            holder.imageView = (NetworkImageView)view.findViewById(R.id.thumbnail);
+            holder.imageView = (FadeInNetworkImageView)view.findViewById(R.id.thumbnail);
             //時間があったら投稿時間表示
             view.setTag(holder);
         } else {
@@ -63,7 +63,7 @@ public class FeedAdapter extends ArrayAdapter<Item> {
 	}
 	
     static class ViewHolder {
-    	NetworkImageView imageView;
+    	FadeInNetworkImageView imageView;
         TextView titleTextView;
         TextView descriptionTextView;
     }
