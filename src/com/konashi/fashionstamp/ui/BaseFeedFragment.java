@@ -31,6 +31,7 @@ public class BaseFeedFragment extends Fragment {
 	protected ArrayList<Item> mFeedList;
 	protected FeedAdapter mAdapter;
 	protected ListView mListView;
+	protected String mRequestUrl;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class BaseFeedFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
+		mRequestUrl = getArguments().getString("requestUrl");
 		mFeedList = new ArrayList<Item>();
 		
 		fetchFeed();
@@ -48,7 +50,7 @@ public class BaseFeedFragment extends Fragment {
 
 	public void fetchFeed(){
 		mQueue = Volley.newRequestQueue(getActivity());
-		JsonArrayRequest req = new JsonArrayRequest("http://still-ocean-5133.herokuapp.com/items.json",
+		JsonArrayRequest req = new JsonArrayRequest(mRequestUrl,
 	            new Response.Listener<JSONArray>() {
 	                @Override public void onResponse(JSONArray response) {
 	                    mFeedList.addAll(Feed.parseFeedJson(response));

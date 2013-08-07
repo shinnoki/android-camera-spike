@@ -16,7 +16,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#22222266"
+        android:background="#44222222"
+        android:padding="10dp"
         android:layout_gravity="bottom" >
 
         <TextView
