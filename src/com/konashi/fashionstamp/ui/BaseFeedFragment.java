@@ -61,12 +61,9 @@ public class BaseFeedFragment extends Fragment {
 									View arg1, int position, long id) {
 								Intent intent = new Intent(getActivity(), ItemShowActivity.class);
 								intent.putExtra("item", mFeedList.get(position));
-								// startActivity(intent);
-								
-								// animation
-								ActivityOptions animation = ActivityOptions.makeCustomAnimation(getActivity(),
-								        R.anim.swipe_in_left, R.anim.swipe_out_left);
-								getActivity().startActivity(intent, animation.toBundle());
+								startActivity(intent);
+
+                                getActivity().overridePendingTransition(R.anim.swipe_in_left, R.anim.swipe_out_left);
 							}
 						});
 	                }
