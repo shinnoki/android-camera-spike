@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
 
 import android.app.Activity;
@@ -17,6 +16,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
@@ -24,8 +24,8 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.android.volley.toolbox.Volley;
 import com.example.camerastamp.R;
 import com.konashi.fashionstamp.ui.helper.BitmapCache;
-import com.konashi.fashionstamp.ui.helper.ImageHelper;
 import com.konashi.fashionstamp.ui.helper.UploadAsyncTask;
+import com.konashi.fashionstamp.view.CommentView;
 
 public class ItemShowActivity extends Activity implements OnTouchListener {
 
@@ -62,23 +62,19 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.show_item, menu);
-        return true;
-    }
-
-    @Override
     public boolean onTouch(View v, MotionEvent event) {
         int action = event.getAction();
         int touchX = (int)event.getX();
         int touchY = (int)event.getY();
 
         if (action == MotionEvent.ACTION_DOWN) {
-            View view = this.getLayoutInflater().inflate(R.layout.test, null);
+            // View commentView = new CommentView(this);
+            View view = this.getLayoutInflater().inflate(R.layout.comment, null);
+            
+            // textを書き換える
+            TextView textView = (TextView)view.findViewById(R.id.body);
+            textView.setText("text");
 
-            // ImageView itemImg = new ImageView(this);
-            // itemImg.setImageDrawable(getResources().getDrawable(R.drawable.ecalic019_088));
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
