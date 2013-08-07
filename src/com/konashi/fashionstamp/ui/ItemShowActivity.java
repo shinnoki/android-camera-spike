@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,12 +19,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.example.camerastamp.R;
 import com.konashi.fashionstamp.entity.Comment;
 import com.konashi.fashionstamp.entity.Item;
+import com.konashi.fashionstamp.model.Feed;
 import com.konashi.fashionstamp.ui.helper.BitmapCache;
 import com.konashi.fashionstamp.ui.helper.UploadAsyncTask;
 
@@ -32,6 +37,7 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
     private RelativeLayout mLayout;
     private RequestQueue mQueue;
     private Item mItem;
+    private int mItemId;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +51,26 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
 
         Intent intent = getIntent();
         mItem = (Item)intent.getSerializableExtra("item");
+        mItemId = mItem.getId();
         
-        if (mItem != null) {
-             // Load image
-            String url = mItem.getImage();
-            NetworkImageView itemImg = (NetworkImageView)findViewById(R.id.itemImageView);
-            itemImg.setImageUrl(url, new ImageLoader(mQueue, new BitmapCache()));
-            
-        }
+        String url = "http://still-ocean-5133.herokuapp.com/items/" + mItemId + ".json";
+        JsonObjectRequest req = new JsonObjectRequest(url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        mItem = Feed.parseItem(response);
+                        NetworkImageView itemImg = (NetworkImageView)findViewById(R.id.itemImageView);
+                        itemImg.setImageUrl(mItem.getImage(), new ImageLoader(mQueue, new BitmapCache()));
+                        drawComments(mItem.getComments());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO error handling
+                    }
+                });
+        mQueue.add(req);
     }
     
     private void drawComments(List<Comment> comments) {
@@ -71,17 +89,7 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
             params.leftMargin = (int)x;
             params.topMargin = (int)y;
             mLayout.addView(view, params);
-            
         }
-        
-    }
-    
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        // TODO 自動生成されたメソッド・スタブ
-        super.onWindowFocusChanged(hasFocus);
-        
-        drawComments(mItem.getComments());
     }
 
     @Override

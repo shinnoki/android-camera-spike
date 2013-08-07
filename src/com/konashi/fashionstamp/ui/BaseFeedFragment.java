@@ -27,7 +27,6 @@ import com.konashi.fashionstamp.model.Feed;
 public class BaseFeedFragment extends Fragment {
 	
 	protected RequestQueue mQueue;
-	protected Feed mFeed;
 	protected ArrayList<Item> mFeedList;
 	protected FeedAdapter mAdapter;
 	protected ListView mListView;
@@ -41,14 +40,13 @@ public class BaseFeedFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		mFeed = new Feed();
 		mFeedList = new ArrayList<Item>();
 		
 		mQueue = Volley.newRequestQueue(getActivity());
 		JsonArrayRequest req = new JsonArrayRequest("http://still-ocean-5133.herokuapp.com/items.json",
 	            new Response.Listener<JSONArray>() {
 	                @Override public void onResponse(JSONArray response) {
-	                    mFeedList.addAll(mFeed.parseFeedJson(response));
+	                    mFeedList.addAll(Feed.parseFeedJson(response));
 	                    FeedAdapter mAdapter = new FeedAdapter(getActivity(), mFeedList);
 	                    mListView.setAdapter(mAdapter);
 	                    mListView.setOnItemClickListener(new OnItemClickListener() {
