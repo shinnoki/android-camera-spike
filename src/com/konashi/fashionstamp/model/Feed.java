@@ -6,6 +6,7 @@ package com.konashi.fashionstamp.model;
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,19 +17,29 @@ import com.konashi.fashionstamp.entity.Item;
 
 public class Feed {
 	
+	public Item parseItem(JSONObject obj){
+		Item item = new Item();
+		try {
+			item.setId(obj.getInt("id"));
+			item.setTitle(obj.getString("title"));
+			item.setDescription(obj.getString("description"));
+			item.setImage(obj.getJSONObject("image").getString("url"));
+			item.setCreatedAt(obj.getString("created_at"));
+			item.setComments(parseComments(obj.getJSONArray("comments")));
+		} catch (JSONException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+		return item;
+	}
+	
 	public ArrayList<Item> parseFeedJson(JSONArray response){
 		ArrayList<Item> feed = new ArrayList<Item>();
 		for(int i = 0; i < response.length(); i++){
 			Item item = new Item();
 			try {
 				JSONObject obj = response.getJSONObject(i);
-				item.setTitle(obj.getString("title"));
-				item.setDescription(obj.getString("description"));
-				item.setImage(obj.getJSONObject("image").getString("url"));
-				item.setCreatedAt(obj.getString("created_at"));
-				item.setComments(parseComments(obj.getJSONArray("comments")));
-				
-				feed.add(item);	
+				feed.add(parseItem(obj));	
 			} catch (JSONException e) {
 				// TODO 自動生成された catch ブロック
 				e.printStackTrace();
@@ -39,6 +50,7 @@ public class Feed {
 	
 	private ArrayList<Comment> parseComments(JSONArray comment_arr){
 		ArrayList<Comment> comments = new ArrayList<Comment>();
+		
 		for(int i = 0; i < comment_arr.length(); i++){
 			Comment comment = new Comment();
 			try {
@@ -46,8 +58,9 @@ public class Feed {
 				comment.setBody(obj.getString("body"));
 				comment.setX((float) obj.getDouble("x"));
 				comment.setY((float) obj.getDouble("y"));
-				comment.setStamp(obj.getInt("stamp"));
 				comment.setCreatedAt(obj.getString("created_at"));
+				int stampId = obj.getInt("stamp");
+				comment.setStamp(stampId);
 				
 				comments.add(comment);
 			} catch (JSONException e) {
@@ -56,6 +69,5 @@ public class Feed {
 			}
 		}
 		return comments;
-		
 	}
 }
