@@ -2,7 +2,6 @@ package com.konashi.fashionstamp.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Item implements Serializable {
 	
@@ -12,7 +11,7 @@ public class Item implements Serializable {
     private String createdAt;
     private String title;
     private String description;
-    private HashMap<Integer, Integer> stampCount;
+    private int[] stampCount;
     
 	public int getId() {
 		return id;
@@ -50,10 +49,10 @@ public class Item implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-    public HashMap<Integer, Integer> getStampCount() {
+    public int[] getStampCount() {
 		return stampCount;
 	}
-	public void setStampCount(HashMap<Integer, Integer> stampCount) {
+	public void setStampCount(int[] stampCount) {
 		this.stampCount = stampCount;
 	}
 }
