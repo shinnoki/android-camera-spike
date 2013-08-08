@@ -1,26 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item 
-        android:id="@+id/menu_visible"
-        android:icon="@drawable/ic_menu_view"
+        android:id="@+id/menu_stamp"
+        android:icon="@android:drawable/ic_menu_add"
         android:showAsAction="ifRoom"
         android:title="Stamp"/>
-
-    <item 
-        android:id="@+id/menu_like"
-        android:icon="@drawable/ic_menu_star"
-        android:showAsAction="ifRoom"
-        android:title="Like"/>
-
-    <item 
-        android:id="@+id/menu_questioin"
-        android:icon="@drawable/ic_menu_help"
-        android:showAsAction="ifRoom"
-        android:title="Question"/>
-
-    <item 
-        android:id="@+id/menu_dislike"
-        android:icon="@drawable/ic_menu_start_conversation"
-        android:showAsAction="ifRoom"
-        android:title="Dislike"/>
 </menu>

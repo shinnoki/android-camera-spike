@@ -9,7 +9,8 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONObject;
 
-import android.R.integer;
+import android.R.anim;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,9 +25,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -42,19 +47,25 @@ import com.konashi.fashionstamp.model.Feed;
 import com.konashi.fashionstamp.ui.helper.BitmapCache;
 import com.konashi.fashionstamp.ui.helper.UploadAsyncTask;
 
-public class ItemShowActivity extends Activity implements OnTouchListener {
+public class ItemShowActivity extends Activity implements OnTouchListener, OnCheckedChangeListener {
 
     private RelativeLayout mLayout;
     private RequestQueue mQueue;
     private Item mItem;
     private int mItemId;
     
+    private ToggleButton mtb_like;
+    private ToggleButton mtb_question;
+    private ToggleButton mtb_dislike;
+    private ToggleButton mtb_all;
+    
     private View mCommentEdit = null;
     private float mCommentX;
     private float mCommentY;
     
-    private List<View> commentViews = new ArrayList<View>();
-    private boolean isCommentVisible = true;
+    private List<View> likeViews = new ArrayList<View>();
+    private List<View> questionViews = new ArrayList<View>();
+    private List<View> dislikeViews = new ArrayList<View>();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +74,27 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
         
         mLayout = (RelativeLayout)this.findViewById(R.id.rLayout);
         mLayout.setOnTouchListener(this);
+        
+        // dropdown list
+        String[] stamps = { "コメント", "Like", "Question", "Dislike" };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, stamps);
+        ActionBar bar = getActionBar();
+        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        bar.setListNavigationCallbacks(adapter, new ActionBar.OnNavigationListener() {
+            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                return false;
+            }
+        });
+        
+        // toggleBttons
+        mtb_like = (ToggleButton)findViewById(R.id.toggle_like);
+        mtb_like.setOnCheckedChangeListener(this);
+        mtb_question = (ToggleButton)findViewById(R.id.toggle_question);
+        mtb_question.setOnCheckedChangeListener(this);
+        mtb_dislike = (ToggleButton)findViewById(R.id.toggle_dislike);
+        mtb_dislike.setOnCheckedChangeListener(this);
+        mtb_all = (ToggleButton)findViewById(R.id.toggle_all);
+        mtb_all.setOnCheckedChangeListener(this);
         
         mQueue = Volley.newRequestQueue(this);
 
@@ -91,27 +123,6 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
         mQueue.add(req);
     }
     
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.show_item, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.menu_visible) {
-		    if (isCommentVisible) {
-    			setCommentsVisiblity(false);
-    			isCommentVisible = false;
-		    } else {
-		        setCommentsVisiblity(true);
-		        isCommentVisible = true;
-		    }
-		}
-
-		return super.onOptionsItemSelected(item);
-	}
     
     private void drawComments(List<Comment> comments) {
         for (Comment comment : comments) {
@@ -129,29 +140,41 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-        int size = mLayout.getWidth();
-        float x = comment.getX() * size / 100;
-        float y = comment.getY() * size / 100;
-        // float y = comment.getY() * mLayout.getHeight() / 100;
+        float x = comment.getX() * mLayout.getWidth() / 100;
+        float y = comment.getY() * mLayout.getHeight() / 100;
         params.leftMargin = (int)x;
         params.topMargin = (int)y;
 
+        switch (comment.getStamp()) {
+        case 1:
+            likeViews.add(view); break;
+        case 2:
+            questionViews.add(view); break;
+        case 3:
+            dislikeViews.add(view); break;
+        }
+
         mLayout.addView(view, params);
-        commentViews.add(view);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_in_comment);
+        view.startAnimation(animation);
     }
     
-    private void setCommentsVisiblity(boolean visible) {
-        if (visible)
-        {
-            for (View v : commentViews) {
-                Animation animation= AnimationUtils.loadAnimation(this,R.anim.fade_in_comment);
-                v.startAnimation(animation);
-            }
-        } else {
-            for (View v : commentViews) {
-                Animation animation= AnimationUtils.loadAnimation(this,R.anim.fade_out_comment);
-                v.startAnimation(animation);
-            }
+    private void setCommentsVisiblity(int stamp, boolean visible) {
+        List<View> views = null;
+        switch (stamp) {
+            case 1:
+                views = likeViews; break;
+            case 2:
+                views = questionViews; break;
+            case 3:
+                views = dislikeViews; break;
+        }
+        if (views == null) return;
+        
+        Animation animation = AnimationUtils.loadAnimation(this, visible ? R.anim.fade_in_comment : R.anim.fade_out_comment);
+        
+        for (View v: views) {
+            v.startAnimation(animation);
         }
     }
 
@@ -188,6 +211,7 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
     
                             submitComment(1, x, y, v.getText().toString());
                             mLayout.removeView(mCommentEdit);
+                            mCommentEdit = null;
     
                             return true;
                         }
@@ -196,7 +220,6 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
                 });
             }
 
-            
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -207,10 +230,6 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
 
             mCommentX = touchX;
             mCommentY = touchY;
-            
-
-
-         
         }
 
         return false;
@@ -242,4 +261,25 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
         super.finish();
         overridePendingTransition(R.anim.swipe_in_right, R.anim.swipe_out_right);
     }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.toggle_all:
+                mtb_like.setChecked(isChecked);
+                mtb_question.setChecked(isChecked);
+                mtb_dislike.setChecked(isChecked);
+                break;
+            case R.id.toggle_like:
+                setCommentsVisiblity(1, isChecked);
+                break;
+            case R.id.toggle_question:
+                setCommentsVisiblity(2, isChecked);
+                break;
+            case R.id.toggle_dislike:
+                setCommentsVisiblity(3, isChecked);
+                break;
+        }
+    }
+    
 }
