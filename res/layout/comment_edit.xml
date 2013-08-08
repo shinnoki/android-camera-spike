@@ -2,25 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:background="@drawable/comment_body_background" >
     
-    <!--
     <ImageView 
-        android:src="@drawable/ecalic019_088"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-  -->
+        android:src="@drawable/ic_menu_star"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_gravity="center_vertical"/>
 
     <EditText
         android:id="@+id/editBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_menu_star"
-        android:background="@drawable/comment_body_background"
         android:textCursorDrawable="@null"
         android:paddingRight="6dp"
         android:inputType="text"
         android:imeOptions="actionSend" 
-        android:textColor="#fff" />
+        android:textColor="#fff"
+        android:textSize="12sp" />
 
 </LinearLayout>

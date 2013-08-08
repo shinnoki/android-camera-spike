@@ -45,8 +45,8 @@ public class FeedAdapter extends ArrayAdapter<Item> {
             holder.questionCountTextView = (TextView)view.findViewById(R.id.question_count);
             holder.dislikeCountTextView = (TextView)view.findViewById(R.id.dislike_count);
             holder.descriptionTextView = (TextView)view.findViewById(R.id.description);
+            holder.createdAtTextView = (TextView)view.findViewById(R.id.created_at);
             holder.imageView = (FadeInNetworkImageView)view.findViewById(R.id.thumbnail);
-            //時間があったら投稿時間表示
             view.setTag(holder);
         } else {
             holder = (ViewHolder)view.getTag();
@@ -58,6 +58,7 @@ public class FeedAdapter extends ArrayAdapter<Item> {
         holder.likeCountTextView.setText(Integer.toString(item.getStampCount()[0]));
         holder.questionCountTextView.setText(Integer.toString(item.getStampCount()[1]));
         holder.dislikeCountTextView.setText(Integer.toString(item.getStampCount()[2]));
+        holder.createdAtTextView.setText(item.getCreatedAt());
 
         holder.imageView.setImageUrl(item.getImage(), new ImageLoader(mQueue, new BitmapCache()));
         
@@ -75,6 +76,7 @@ public class FeedAdapter extends ArrayAdapter<Item> {
         TextView likeCountTextView;
         TextView questionCountTextView;
         TextView dislikeCountTextView;
+        TextView createdAtTextView;
     }
 
 }
