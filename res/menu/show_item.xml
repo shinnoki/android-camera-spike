@@ -2,7 +2,7 @@
 
     <item 
         android:id="@+id/menu_stamp"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/paper_plane"
         android:showAsAction="ifRoom"
         android:title="Stamp"/>
 </menu>

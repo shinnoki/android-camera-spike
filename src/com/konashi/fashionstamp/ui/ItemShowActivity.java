@@ -9,10 +9,11 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONObject;
 
-import android.R.anim;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -63,6 +64,8 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
     private float mCommentX;
     private float mCommentY;
     
+    private int mStamp;
+    
     private List<View> likeViews = new ArrayList<View>();
     private List<View> questionViews = new ArrayList<View>();
     private List<View> dislikeViews = new ArrayList<View>();
@@ -74,17 +77,6 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         
         mLayout = (RelativeLayout)this.findViewById(R.id.rLayout);
         mLayout.setOnTouchListener(this);
-        
-        // dropdown list
-        String[] stamps = { "コメント", "Like", "Question", "Dislike" };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, stamps);
-        ActionBar bar = getActionBar();
-        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        bar.setListNavigationCallbacks(adapter, new ActionBar.OnNavigationListener() {
-            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                return false;
-            }
-        });
         
         // toggleBttons
         mtb_like = (ToggleButton)findViewById(R.id.toggle_like);
@@ -123,6 +115,43 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         mQueue.add(req);
     }
     
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.show_item, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_stamp) {
+			selectStamp();
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+
+	private void selectStamp() {
+		String[] items = { "いいね！", "気になる", "うーん" };
+
+		new AlertDialog.Builder(this).setItems(items,
+		        new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int item) {
+		        switch (item) {
+                    case 0:
+                        setStamp(1); break;
+                    case 1: 
+                        setStamp(2); break;
+                    case 2:
+                        setStamp(3); break;
+		        }
+		    }
+		}).show();
+	}
+
+	private void setStamp(int stamp) {
+	    mStamp = stamp;
+    }
     
     private void drawComments(List<Comment> comments) {
         for (Comment comment : comments) {
@@ -146,12 +175,12 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         params.topMargin = (int)y;
 
         switch (comment.getStamp()) {
-        case 1:
-            likeViews.add(view); break;
-        case 2:
-            questionViews.add(view); break;
-        case 3:
-            dislikeViews.add(view); break;
+            case 1:
+                likeViews.add(view); break;
+            case 2:
+                questionViews.add(view); break;
+            case 3:
+                dislikeViews.add(view); break;
         }
 
         mLayout.addView(view, params);
@@ -186,50 +215,54 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         int touchY = (int)event.getY();
 
         if (action == MotionEvent.ACTION_DOWN) {
-            if (mCommentEdit == null) {
-                mCommentEdit = this.getLayoutInflater().inflate(R.layout.comment_edit, null);
-                mLayout.addView(mCommentEdit);
+            if (mStamp != 0) {
+                if (mCommentEdit == null) {
+                    mCommentEdit = this.getLayoutInflater().inflate(R.layout.comment_edit, null);
+                    mLayout.addView(mCommentEdit);
 
-                EditText editText = (EditText)mCommentEdit.findViewById(R.id.editBody);
-    
-                // Move focus to edit text and open softkeyboard
-                editText.requestFocus();
-                InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);  
-                inputMethodManager.showSoftInput(editText, 0);  
-                
-                // Set event when input finished
-                editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                    @Override
-                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (actionId == EditorInfo.IME_ACTION_SEND) {
-                            // close softkeyboard
-                            ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
-                            v.setFocusable(false);
-    
-                            float x = mCommentX / mLayout.getWidth() * 100;
-                            float y = mCommentY / mLayout.getHeight() * 100;
-    
-                            submitComment(1, x, y, v.getText().toString());
-                            mLayout.removeView(mCommentEdit);
-                            mCommentEdit = null;
-    
-                            return true;
+                    EditText editText = (EditText)mCommentEdit.findViewById(R.id.editBody);
+
+                    // Move focus to edit text and open softkeyboard
+                    editText.requestFocus();
+                    InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);  
+                    inputMethodManager.showSoftInput(editText, 0);  
+
+                    // Set event when input finished
+                    editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                        @Override
+                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                                // close softkeyboard
+                                ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
+                                v.setFocusable(false);
+
+                                float x = mCommentX / mLayout.getWidth() * 100;
+                                float y = mCommentY / mLayout.getHeight() * 100;
+
+                                submitComment(mStamp, x, y, v.getText().toString());
+                                mLayout.removeView(mCommentEdit);
+                                mCommentEdit = null;
+                                mStamp = 0;
+
+                                return true;
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                });
+                    });
+                }
+
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                mCommentEdit.setLayoutParams(params);
+
+                params.leftMargin = touchX;
+                params.topMargin = touchY;
+
+                mCommentX = touchX;
+                mCommentY = touchY;
             }
 
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            mCommentEdit.setLayoutParams(params);
-
-            params.leftMargin = touchX;
-            params.topMargin = touchY;
-
-            mCommentX = touchX;
-            mCommentY = touchY;
         }
 
         return false;
@@ -279,6 +312,17 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
             case R.id.toggle_dislike:
                 setCommentsVisiblity(3, isChecked);
                 break;
+        }
+    }
+    
+    @Override
+    public void onBackPressed() {
+        if (mCommentEdit != null) {
+            mLayout.removeView(mCommentEdit);
+            mCommentEdit = null;
+            mStamp = 0;
+        } else {
+            super.onBackPressed();
         }
     }
     
