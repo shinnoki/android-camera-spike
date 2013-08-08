@@ -9,11 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/itemImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -36,6 +31,11 @@
                 android:text=""
                 android:textSize="13dp" />
         </LinearLayout>
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/itemImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <RelativeLayout
             android:id="@+id/rLayout"
