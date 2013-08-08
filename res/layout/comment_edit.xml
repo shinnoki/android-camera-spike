@@ -20,6 +20,6 @@
         android:inputType="text"
         android:imeOptions="actionSend" 
         android:textColor="#fff"
-        android:textSize="12sp" />
+        android:textSize="13sp" />
 
 </LinearLayout>

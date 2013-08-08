@@ -8,7 +8,31 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
+        
+	<LinearLayout 
+	    android:orientation="vertical"
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent" 
+	    android:background="#eee"
+	    android:padding="4dp">
+	    
+        <TextView
+            android:id="@+id/item_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:text="タイトルテストテストテスト" />
 
+        <TextView
+            android:id="@+id/item_description"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13dp"
+            android:text="タイトルテストテストテストタイトルテストテストテストタイトルテストテストテストタイトルテストテストテストタイトルテストテストテスト" />
+
+        </LinearLayout>
+        
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/itemImageView"
             android:layout_width="match_parent"
@@ -22,46 +46,97 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:background="#eee"
+        android:layout_height="100dp"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal" >
-     
+        android:background="#eee"
+        android:orientation="vertical" >
 
-        <ToggleButton
-            android:id="@+id/toggle_like"
+        <LinearLayout
+            android:id="@+id/flag_box"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:checked="true"
-            android:drawableLeft="@drawable/ic_menu_star"
-            android:drawablePadding="5dp"/>
+            android:layout_height="50dp"
+            android:background="#eee"
+            android:orientation="horizontal" >
 
-        <ToggleButton
-            android:id="@+id/toggle_question"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" 
-            android:layout_weight="1"
-            android:checked="true"
-            android:drawableLeft="@drawable/ic_menu_star"/>
+            <TextView
+                android:id="@+id/flag_like"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/flag"
+                android:drawablePadding="5dp"
+                android:text="1" />
 
-        <ToggleButton
-            android:id="@+id/toggle_dislike"
+            <TextView
+                android:id="@+id/flag_question"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/flag"
+                android:drawablePadding="5dp"
+                android:text="1" />
+
+            <TextView
+                android:id="@+id/flag_dislike"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/flag"
+                android:drawablePadding="5dp"
+                android:text="1" />
+
+            <TextView
+                android:id="@+id/flag_all"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/flag"
+                android:drawablePadding="5dp"
+                android:text="1" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" 
-            android:layout_weight="1"
-            android:checked="true"
-            android:drawableLeft="@drawable/ic_menu_star" />
-        
-        <ToggleButton
-            android:id="@+id/toggle_all"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:checked="true"
-            android:textOff="ALL OFF"
-            android:textOn="ALL ON" />
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/flag_box"
+            android:background="#eee"
+            android:orientation="horizontal" >
+
+            <ToggleButton
+                android:id="@+id/toggle_like"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:checked="true"
+                android:drawableLeft="@drawable/ic_menu_star"
+                android:drawablePadding="5dp" />
+
+            <ToggleButton
+                android:id="@+id/toggle_question"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:checked="true"
+                android:drawableLeft="@drawable/ic_menu_star" />
+
+            <ToggleButton
+                android:id="@+id/toggle_dislike"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:checked="true"
+                android:drawableLeft="@drawable/ic_menu_star" />
+
+            <ToggleButton
+                android:id="@+id/toggle_all"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:checked="true"
+                android:textOff="ALL OFF"
+                android:textOn="ALL ON" />
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
