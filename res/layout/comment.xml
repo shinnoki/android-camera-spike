@@ -9,14 +9,16 @@
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_menu_star" />
+        android:src="@drawable/ic_menu_star"
+        android:background="#88FFD700" />
 
     <TextView
         android:id="@+id/body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:paddingRight="6dp"
         android:textColor="#fff"
-        android:textSize="12sp" />
+        android:textSize="13sp" />
 
 </LinearLayout>
