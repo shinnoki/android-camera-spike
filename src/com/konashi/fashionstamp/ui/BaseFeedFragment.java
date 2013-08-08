@@ -32,6 +32,8 @@ public class BaseFeedFragment extends Fragment {
 	protected ListView mListView;
 	protected String mRequestUrl;
 	
+	protected Boolean mIsFirstBoot = true;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,7 +42,7 @@ public class BaseFeedFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+		mListView = (ListView)getView().findViewById(R.id.listView);
 		mRequestUrl = getArguments().getString("requestUrl");
 		mFeedList = new ArrayList<Item>();
 		
@@ -58,7 +60,10 @@ public class BaseFeedFragment extends Fragment {
 									View arg1, int position, long id) {
 								Intent intent = new Intent(getActivity(), ItemShowActivity.class);
 								intent.putExtra("item", mFeedList.get(position));
+								intent.putExtra("isFirstBoot?", mIsFirstBoot);
 								startActivity(intent);
+								
+								mIsFirstBoot = false;
 
                                 getActivity().overridePendingTransition(R.anim.swipe_in_left, R.anim.swipe_out_left);
 							}
@@ -76,7 +81,6 @@ public class BaseFeedFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.feed_list, null);
-		mListView = (ListView)view.findViewById(R.id.listView);
 		return view;
 	}
 
