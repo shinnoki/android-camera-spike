@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -45,10 +44,6 @@ public class BaseFeedFragment extends Fragment {
 		mRequestUrl = getArguments().getString("requestUrl");
 		mFeedList = new ArrayList<Item>();
 		
-		fetchFeed();
-	}
-
-	public void fetchFeed(){
 		mQueue = Volley.newRequestQueue(getActivity());
 		JsonArrayRequest req = new JsonArrayRequest(mRequestUrl,
 	            new Response.Listener<JSONArray>() {
@@ -77,7 +72,7 @@ public class BaseFeedFragment extends Fragment {
 	            });
 		mQueue.add(req);
 	}
-	
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.feed_list, null);

@@ -66,6 +66,7 @@ public class UploadActivity extends Activity implements OnClickListener {
         
             String url = "http://still-ocean-5133.herokuapp.com/items.json";
             new UploadAsyncTask(this, url).execute(entity);
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
