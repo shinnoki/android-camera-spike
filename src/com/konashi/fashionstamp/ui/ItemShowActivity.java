@@ -85,7 +85,7 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         
         Boolean isFirstBoot = intent.getBooleanExtra("isFirstBoot?", false);
         if(isFirstBoot){
-        	Toast.makeText(getApplicationContext(), "↓重なって見づらい時は非常時で快適に", Toast.LENGTH_LONG).show();
+        	Toast.makeText(getApplicationContext(), "↓重なって見づらい時は非表示で快適に", Toast.LENGTH_LONG).show();
         }
         
         setTitle(mItem.getTitle());
