@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -230,11 +231,27 @@ public class FeedActivity extends FragmentActivity {
         }
 
         if (requestCode == REQUEST_GALLERY) {
-            wakeUpCrop(data.getData());
+            // wakeUpCrop(data.getData());
             /// wakeUpUploadActivity(data.getData());
         }
         
         if (requestCode == REQUEST_CROP) {
+            try {
+                InputStream is = getContentResolver().openInputStream(data.getData());
+                Bitmap img = BitmapFactory.decodeStream(is);
+                is.close();
+    
+                Bundle b = new Bundle();
+                b.putParcelable("image", img);
+                Intent i = new Intent(this, UploadActivity.class);
+                i.putExtras(b);
+                startActivityForResult(i, REQUEST_UPLOAD);
+                
+            } catch(Exception e) {
+                
+            }
+
+            /*
             Bundle ext = data.getExtras();
 
             if (ext != null) {
@@ -246,6 +263,7 @@ public class FeedActivity extends FragmentActivity {
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_UPLOAD);
             }
+            */
         }
         
         if (requestCode == REQUEST_UPLOAD) {
@@ -260,17 +278,7 @@ public class FeedActivity extends FragmentActivity {
     }
     
     private void wakeUpCamera(){
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(System.currentTimeMillis());
-        stringBuilder.append(".jpg");
- 
-        String fileName = stringBuilder.toString();
- 
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, fileName);
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-        ContentResolver contentResolver = getContentResolver();
-        mSaveUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        mSaveUri = generateSaveUri();
  
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -279,9 +287,9 @@ public class FeedActivity extends FragmentActivity {
     }
 
     private void wakeUpGallery() {
-        Intent intent = new Intent();
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra("crop", "true");
         startActivityForResult(intent, REQUEST_GALLERY);
     }
     
@@ -295,17 +303,17 @@ public class FeedActivity extends FragmentActivity {
             query.moveToFirst();
             int degree = query.getInt(0);
             
-            //画像自体は読み込まず、画像サイズなどのみを読み込む
+            // 画像自体は読み込まず、画像サイズなどのみを読み込む
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeFile(uri.toString(), options);
              
-            //読み込むスケールを計算する
+            // 読み込むスケールを計算する
             int scaleW = options.outWidth / 320+1;
             int scaleH = options.outHeight / 240+1;
             options.inSampleSize = Math.max(scaleW, scaleH);
              
-            //計算したスケールで画像を読み込む
+            // 計算したスケールで画像を読み込む
             options.inJustDecodeBounds = false;
             InputStream is = getContentResolver().openInputStream(uri);  
             Bitmap img = BitmapFactory.decodeStream(is, null, options);
@@ -328,6 +336,8 @@ public class FeedActivity extends FragmentActivity {
     }
     
     private void wakeUpCrop(Uri uri) {
+        mSaveUri = generateSaveUri();
+ 
         Intent intent = new Intent("com.android.camera.action.CROP");
         
         intent.putExtra("outputX", 600);
@@ -335,9 +345,49 @@ public class FeedActivity extends FragmentActivity {
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
         intent.putExtra("scale", true);
-        intent.putExtra("return-data", true);
+        intent.putExtra("return-data", false);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);
        
         intent.setData(uri);
         startActivityForResult(intent, REQUEST_CROP);
+    }
+    
+    private Uri generateSaveUri() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(System.currentTimeMillis());
+        stringBuilder.append(".jpg");
+ 
+        String fileName = stringBuilder.toString();
+ 
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, fileName);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        ContentResolver contentResolver = getContentResolver();
+        return contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    }
+    
+    private int getRotateDegree(String filePath)
+    {
+        int degree = 0;
+        try {
+            ExifInterface exifInterface = new ExifInterface(filePath);
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                degree = 90;
+            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                degree = 180;
+            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                degree = 270;
+            }
+            if (degree != 0) {
+                exifInterface.setAttribute(ExifInterface.TAG_ORIENTATION, "0");
+                exifInterface.saveAttributes();
+            }
+        } catch (IOException e) {
+            degree = -1;
+            e.printStackTrace();
+        }
+     
+        return degree;
     }
 }
