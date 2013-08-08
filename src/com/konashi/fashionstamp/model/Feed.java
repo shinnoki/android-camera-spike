@@ -5,13 +5,15 @@ package com.konashi.fashionstamp.model;
  * JSONのパースなどなど実装予定
  */
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.konashi.fashionstamp.entity.Comment;
 import com.konashi.fashionstamp.entity.Item;
 
@@ -24,7 +26,7 @@ public class Feed {
 			item.setTitle(obj.getString("title"));
 			item.setDescription(obj.getString("description"));
 			item.setImage(obj.getJSONObject("image").getString("url"));
-			item.setCreatedAt(obj.getString("created_at"));
+//			item.setCreatedAt(parseDateTime(obj.getString("created_at")));
 			ArrayList<Comment> comments = parseComments(obj.getJSONArray("comments"));
 			item.setComments(comments);
 			item.setStampCount(countStamp(comments));
@@ -95,4 +97,14 @@ public class Feed {
 		}
 		return stampCountArray;
 	}
+	
+//	private static String parseDateTime(String str){
+//		String dateTime = null;
+//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+//		try {
+//            Date date = new Date().parse(dateTime);
+//        } catch (ParseException ex){
+//            System.out.println("Exception "+ex);
+//        }
+//	}
 }
