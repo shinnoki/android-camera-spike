@@ -8,35 +8,34 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-        
-	<LinearLayout 
-	    android:orientation="vertical"
-	    android:layout_height="wrap_content"
-	    android:layout_width="fill_parent" 
-	    android:background="#eee"
-	    android:padding="4dp">
-	    
-        <TextView
-            android:id="@+id/item_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:text="タイトルテストテストテスト" />
 
-        <TextView
-            android:id="@+id/item_description"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textSize="13dp"
-            android:text="タイトルテストテストテストタイトルテストテストテストタイトルテストテストテストタイトルテストテストテストタイトルテストテストテスト" />
-
-        </LinearLayout>
-        
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/itemImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#eee"
+            android:orientation="vertical"
+            android:padding="4dp" >
+
+            <TextView
+                android:id="@+id/item_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/item_description"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="13dp" />
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/rLayout"
@@ -62,37 +61,45 @@
                 android:id="@+id/flag_like"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:background="@drawable/flag"
                 android:drawablePadding="5dp"
-                android:text="1" />
+                android:text="1"
+                android:textSize="23dp" />
 
             <TextView
                 android:id="@+id/flag_question"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:background="@drawable/flag"
                 android:drawablePadding="5dp"
-                android:text="1" />
+                android:text="1"
+                android:textSize="23dp" />
 
             <TextView
                 android:id="@+id/flag_dislike"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:background="@drawable/flag"
                 android:drawablePadding="5dp"
-                android:text="1" />
+                android:text="1"
+                android:textSize="23dp" />
 
             <TextView
                 android:id="@+id/flag_all"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:background="@drawable/flag"
                 android:drawablePadding="5dp"
-                android:text="1" />
+                android:text="1"
+                android:textSize="23dp" />
         </LinearLayout>
 
         <LinearLayout
