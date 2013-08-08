@@ -32,6 +32,8 @@ public class BaseFeedFragment extends Fragment {
 	protected ListView mListView;
 	protected String mRequestUrl;
 	
+	protected Boolean mIsFirstBoot = true;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,7 +60,10 @@ public class BaseFeedFragment extends Fragment {
 									View arg1, int position, long id) {
 								Intent intent = new Intent(getActivity(), ItemShowActivity.class);
 								intent.putExtra("item", mFeedList.get(position));
+								intent.putExtra("isFirstBoot?", mIsFirstBoot);
 								startActivity(intent);
+								
+								mIsFirstBoot = false;
 
                                 getActivity().overridePendingTransition(R.anim.swipe_in_left, R.anim.swipe_out_left);
 							}

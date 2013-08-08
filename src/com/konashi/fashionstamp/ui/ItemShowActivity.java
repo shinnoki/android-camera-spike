@@ -9,7 +9,6 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONObject;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -19,21 +18,22 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.android.volley.RequestQueue;
@@ -62,6 +62,8 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
     private ToggleButton mtb_dislike;
     private ToggleButton mtb_all;
     
+    private Button iwaseteButton;
+    
     private View mCommentEdit = null;
     private float mCommentX;
     private float mCommentY;
@@ -77,6 +79,17 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_item);
         
+        Intent intent = getIntent();
+        mItem = (Item)intent.getSerializableExtra("item");
+        mItemId = mItem.getId();
+        
+        Boolean isFirstBoot = intent.getBooleanExtra("isFirstBoot?", false);
+        if(isFirstBoot){
+        	Toast.makeText(getApplicationContext(), "↓重なって見づらい時は非常時で快適に", Toast.LENGTH_LONG).show();
+        }
+        
+        setTitle(mItem.getTitle());
+        
         mLayout = (RelativeLayout)this.findViewById(R.id.rLayout);
         mLayout.setOnTouchListener(this);
         
@@ -90,11 +103,16 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         mtb_all = (ToggleButton)findViewById(R.id.toggle_all);
         mtb_all.setOnCheckedChangeListener(this);
         
+        iwaseteButton = (Button)findViewById(R.id.iwaseteButton);
+        iwaseteButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				selectStamp();
+			}
+		});
+        
         mQueue = Volley.newRequestQueue(this);
-
-        Intent intent = getIntent();
-        mItem = (Item)intent.getSerializableExtra("item");
-        mItemId = mItem.getId();
         
         // Image Loader
         String url = "http://still-ocean-5133.herokuapp.com/items/" + mItemId + ".json";
@@ -133,36 +151,26 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
                 });
         mQueue.add(req);
     }
-    
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.show_item, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.menu_stamp) {
-			selectStamp();
-		}
-
-		return super.onOptionsItemSelected(item);
-	}
 
 	private void selectStamp() {
-		String[] items = { "いいね！", "気になる", "うーん" };
+		String[] items = { "褒メサセテ！", "質問サセテ！", "物申サセテ！" };
 
 		new AlertDialog.Builder(this).setItems(items,
 		        new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int item) {
 		        switch (item) {
                     case 0:
-                        setStamp(1); break;
+                        setStamp(1); 
+                        Toast.makeText(getApplicationContext(), "写真の褒めたい所をクリック", Toast.LENGTH_LONG).show();
+                        break;
                     case 1: 
-                        setStamp(2); break;
+                        setStamp(2); 
+                        Toast.makeText(getApplicationContext(), "写真の質問したい所をクリック", Toast.LENGTH_LONG).show();
+                        break;
                     case 2:
-                        setStamp(3); break;
+                        setStamp(3); 
+                        Toast.makeText(getApplicationContext(), "写真の物申したい所をクリック", Toast.LENGTH_LONG).show();
+                        break;
 		        }
 		    }
 		}).show();

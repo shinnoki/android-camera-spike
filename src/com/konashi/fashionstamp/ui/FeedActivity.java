@@ -44,8 +44,8 @@ public class FeedActivity extends FragmentActivity {
 	private Uri mSaveUri;
 
 	// Navigation Drawerに関するメンバ変数
-	private String[] mFeedTitles = { "新着アイテム", "注目アイテム", "投稿したアイテム",
-			"ログイン（未実装）", "設定（未実装）" };
+	private String[] mFeedTitles = { "新着アイテム", "注目アイテム", "【未】投稿したアイテム",
+			"【未】ログイン", "【未】設定" };
 	private ListView mDrawerList;
 	private DrawerLayout mDrawerLayout;
 	private CharSequence mTitle;
