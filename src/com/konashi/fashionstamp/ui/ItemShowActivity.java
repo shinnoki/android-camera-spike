@@ -15,6 +15,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -30,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -181,6 +183,20 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
 
         TextView textView = (TextView)view.findViewById(R.id.body);
         textView.setText(comment.getBody());
+        
+        ImageView imgview = (ImageView)view.findViewById(R.id.stamp);
+        switch (comment.getStamp()) {
+        case 1:
+            imgview.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_star)); break;
+        case 2:
+            imgview.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_help));
+            imgview.setBackgroundColor(Color.argb(88, 0, 191, 255));
+            break;
+        case 3:
+            imgview.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_start_conversation));
+            imgview.setBackgroundColor(Color.argb(88, 255, 51, 153));
+            break;
+        }
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,

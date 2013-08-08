@@ -125,7 +125,7 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:checked="true"
-                android:drawableLeft="@drawable/ic_menu_star" />
+                android:drawableLeft="@drawable/ic_menu_help" />
 
             <ToggleButton
                 android:id="@+id/toggle_dislike"
@@ -133,7 +133,7 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:checked="true"
-                android:drawableLeft="@drawable/ic_menu_star" />
+                android:drawableLeft="@drawable/ic_menu_start_conversation" />
 
             <ToggleButton
                 android:id="@+id/toggle_all"
