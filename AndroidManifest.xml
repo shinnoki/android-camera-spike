@@ -39,6 +39,7 @@
         <activity
             android:name="com.konashi.fashionstamp.ui.ItemShowActivity"
             android:screenOrientation="portrait"
+            android:uiOptions="splitActionBarWhenNarrow"
             android:label="@string/app_name" >
         </activity>
     </application>

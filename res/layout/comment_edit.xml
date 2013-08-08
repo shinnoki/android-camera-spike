@@ -4,17 +4,21 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
     
+    <!--
     <ImageView 
         android:src="@drawable/ecalic019_088"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+  -->
 
     <EditText
         android:id="@+id/editBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_menu_star"
         android:background="@drawable/comment_body_background"
         android:inputType="text"
+        android:imeOptions="actionSend" 
         android:textColor="#fff" />
 
 </LinearLayout>

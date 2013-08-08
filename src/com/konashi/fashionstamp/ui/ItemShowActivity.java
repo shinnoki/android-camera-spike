@@ -8,15 +8,17 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONObject;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -57,6 +59,7 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
         mItem = (Item)intent.getSerializableExtra("item");
         mItemId = mItem.getId();
         
+        // Image Loader
         String url = "http://still-ocean-5133.herokuapp.com/items/" + mItemId + ".json";
         JsonObjectRequest req = new JsonObjectRequest(url, null,
                 new Response.Listener<JSONObject>() {
@@ -76,6 +79,13 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
                 });
         mQueue.add(req);
     }
+    
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.show_item, menu);
+		return true;
+	}
     
     private void drawComments(List<Comment> comments) {
         for (Comment comment : comments) {
@@ -103,7 +113,6 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
         int touchY = (int)event.getY();
 
         if (action == MotionEvent.ACTION_DOWN) {
-            // View commentView = new CommentView(this);
             View commentEdit = this.getLayoutInflater().inflate(R.layout.comment_edit, null);
             
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
@@ -124,11 +133,20 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if(event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                        if(event.getAction() == KeyEvent.ACTION_UP) {
-                            // close softkeyboard
-                            ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
-                        }
+                    if (actionId == EditorInfo.IME_ACTION_SEND) {
+                        // close softkeyboard
+                        ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        v.setFocusable(false);
+
+                        int[] pEdit = new int[2];
+                        v.getLocationOnScreen(pEdit);
+                        int[] pLayout = new int[2];
+                        mLayout.getLocationOnScreen(pLayout);
+
+                        float x = (float)(pEdit[0] - pLayout[0]) * mLayout.getWidth() / 100;
+                        float y = (float)(pEdit[1] - pLayout[1]) * mLayout.getHeight() / 100;
+                        submitComment(1, x, y, v.getText().toString());
+
                         return true;
                     }
                     return false;

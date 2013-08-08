@@ -1,21 +1,29 @@
 package com.konashi.fashionstamp.ui;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import android.R.integer;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.camerastamp.R;
+import com.konashi.fashionstamp.entity.Item;
 
 public class FeedActivity extends FragmentActivity {
 
@@ -64,10 +72,12 @@ public class FeedActivity extends FragmentActivity {
 
         if (requestCode == REQUEST_CAMERA) {
             wakeUpCrop(mSaveUri);
+            // wakeUpUploadActivity(mSaveUri);
         }
 
         if (requestCode == REQUEST_GALLERY) {
             wakeUpCrop(data.getData());
+            /// wakeUpUploadActivity(data.getData());
         }
         
         if (requestCode == REQUEST_CROP) {
@@ -85,8 +95,11 @@ public class FeedActivity extends FragmentActivity {
         }
         
         if (requestCode == REQUEST_UPLOAD) {
-            String result = (String)data.getExtras().get("url");
-            Log.d("result", result);
+            Intent intent = new Intent(this, ItemShowActivity.class);
+            Item item = (Item)data.getSerializableExtra("item");
+            intent.putExtra("item", item);
+            startActivity(intent);
+            overridePendingTransition(R.anim.swipe_in_left, R.anim.swipe_out_left);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -132,6 +145,48 @@ public class FeedActivity extends FragmentActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, REQUEST_GALLERY);
+    }
+    
+    private void wakeUpUploadActivity(Uri uri) {
+        try {
+            
+            // Get orientation
+            Cursor query = MediaStore.Images.Media.query(getContentResolver(), uri,
+                new String[] { MediaStore.Images.ImageColumns.ORIENTATION },
+                null, null);
+            query.moveToFirst();
+            int degree = query.getInt(0);
+            
+            //画像自体は読み込まず、画像サイズなどのみを読み込む
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(uri.toString(), options);
+             
+            //読み込むスケールを計算する
+            int scaleW = options.outWidth / 320+1;
+            int scaleH = options.outHeight / 240+1;
+            options.inSampleSize = Math.max(scaleW, scaleH);
+             
+            //計算したスケールで画像を読み込む
+            options.inJustDecodeBounds = false;
+            InputStream is = getContentResolver().openInputStream(uri);  
+            Bitmap img = BitmapFactory.decodeStream(is, null, options);
+            
+            // Rotation
+            Matrix mat = new Matrix();  
+            mat.postRotate(degree);  
+            int max_size = 1024;
+            Bitmap rotated = Bitmap.createBitmap(img, 0, 0, max_size, max_size, mat, true);
+
+            Intent intent = new Intent(this, UploadActivity.class);
+            intent.putExtra("image", rotated);
+            startActivityForResult(intent, REQUEST_UPLOAD);
+            
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
     }
     
     private void wakeUpCrop(Uri uri) {

@@ -14,13 +14,18 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class UploadAsyncTask 
-extends AsyncTask<MultipartEntity, Integer, String> {
+import com.konashi.fashionstamp.entity.Item;
+import com.konashi.fashionstamp.model.Feed;
+import com.konashi.fashionstamp.ui.UploadActivity;
+
+public class UploadAsyncTask extends AsyncTask<MultipartEntity, Integer, String> {
 
     ProgressDialog dialog;
     Context context;
@@ -69,13 +74,18 @@ extends AsyncTask<MultipartEntity, Integer, String> {
         }
         
         
+        
         try {
-            // Parse json object
-            JSONObject jsonObj = new JSONObject(result);
-            String id = jsonObj.getString("id");
-            // String created_at = jsonObj.getString("created_at");
-            
-            Log.d("response id", id);
+            if (context.getClass() == UploadActivity.class) {
+                UploadActivity activity = (UploadActivity)context;
+                JSONObject jsonObj = new JSONObject(result);
+                Item item = Feed.parseItem(jsonObj);
+                
+                Intent data = new Intent();
+                data.putExtra("item", item);
+                activity.setResult(Activity.RESULT_OK, data);
+                activity.finish();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
