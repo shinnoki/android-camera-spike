@@ -14,17 +14,16 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_gravity="bottom"
         android:background="#44222222"
-        android:padding="10dp"
-        android:layout_gravity="bottom" >
+        android:orientation="vertical"
+        android:padding="10dp" >
 
         <TextView
             android:id="@+id/title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:text="タイトル"
+            android:text=""
             android:textColor="#f2f2f2"
             android:textSize="15sp" />
 
@@ -32,59 +31,75 @@
             android:id="@+id/description"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:text="タイトル"
-            android:textColor="#aaa"
+            android:text=""
+            android:textColor="#eee"
             android:textSize="13sp" />
-    </LinearLayout>
-    <!--
-         <LinearLayout
-        android:id="@+id/comment_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#aaa"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal" >
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:src="@android:drawable/ic_dialog_info" />
-        
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="11"/>
+            android:layout_gravity="bottom"
+            android:orientation="horizontal" >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:src="@android:drawable/ic_dialog_info" />
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="11"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:src="@android:drawable/ic_dialog_info" />
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="11"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:src="@android:drawable/ic_dialog_info" />
-                <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="11"/>
+            <LinearLayout
+                android:id="@+id/comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@android:drawable/ic_dialog_info" />
+
+                <TextView
+                    android:id="@+id/like_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#eee"
+                    android:text="11" />
+
+                <ImageView
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@android:drawable/ic_dialog_info" />
+
+                <TextView
+                    android:id="@+id/question_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#eee"
+                    android:text="11" />
+
+                <ImageView
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@android:drawable/ic_dialog_info" />
+
+                <TextView
+                    android:id="@+id/dislike_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#eee"
+                    android:text="11" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/created_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="2013 08/08 01:20"
+                android:textColor="#eee"
+                android:textSize="12sp" />
+        </LinearLayout>
     </LinearLayout>
-    -->
 
 </FrameLayout>

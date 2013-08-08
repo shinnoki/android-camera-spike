@@ -6,7 +6,6 @@ package com.konashi.fashionstamp.model;
  */
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,8 +15,8 @@ import com.konashi.fashionstamp.entity.Comment;
 import com.konashi.fashionstamp.entity.Item;
 
 public class Feed {
-	
-	public static Item parseItem(JSONObject obj){
+
+	public static Item parseItem(JSONObject obj) {
 		Item item = new Item();
 		try {
 			item.setId(obj.getInt("id"));
@@ -25,21 +24,22 @@ public class Feed {
 			item.setDescription(obj.getString("description"));
 			item.setImage(obj.getJSONObject("image").getString("url"));
 			item.setCreatedAt(obj.getString("created_at"));
-			item.setComments(parseComments(obj.getJSONArray("comments")));
+			ArrayList<Comment> comments = parseComments(obj.getJSONArray("comments"));
+			item.setComments(comments);
+			item.setStampCount(countStamp(comments));
 		} catch (JSONException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
 		return item;
 	}
-	
-	public static ArrayList<Item> parseFeedJson(JSONArray response){
+
+	public static ArrayList<Item> parseFeedJson(JSONArray response) {
 		ArrayList<Item> feed = new ArrayList<Item>();
-		for(int i = 0; i < response.length(); i++){
-			Item item = new Item();
+		for (int i = 0; i < response.length(); i++) {
 			try {
 				JSONObject obj = response.getJSONObject(i);
-				feed.add(parseItem(obj));	
+				feed.add(parseItem(obj));
 			} catch (JSONException e) {
 				// TODO 自動生成された catch ブロック
 				e.printStackTrace();
@@ -47,11 +47,11 @@ public class Feed {
 		}
 		return feed;
 	}
-	
-	private static ArrayList<Comment> parseComments(JSONArray comment_arr){
+
+	private static ArrayList<Comment> parseComments(JSONArray comment_arr) {
 		ArrayList<Comment> comments = new ArrayList<Comment>();
-		
-		for(int i = 0; i < comment_arr.length(); i++){
+
+		for (int i = 0; i < comment_arr.length(); i++) {
 			Comment comment = new Comment();
 			try {
 				JSONObject obj = comment_arr.getJSONObject(i);
@@ -69,5 +69,13 @@ public class Feed {
 			}
 		}
 		return comments;
+	}
+
+	private static int[] countStamp(ArrayList<Comment> comments){
+		int[] stampCountArray = {0, 0, 0};
+		for(Comment comment : comments){
+			stampCountArray[comment.getStamp() - 1]++;
+		}
+		return stampCountArray;
 	}
 }

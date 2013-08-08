@@ -41,6 +41,9 @@ public class FeedAdapter extends ArrayAdapter<Item> {
 
             holder = new ViewHolder();
             holder.titleTextView = (TextView)view.findViewById(R.id.title);
+            holder.likeCountTextView = (TextView)view.findViewById(R.id.like_count);
+            holder.questionCountTextView = (TextView)view.findViewById(R.id.question_count);
+            holder.dislikeCountTextView = (TextView)view.findViewById(R.id.dislike_count);
             holder.descriptionTextView = (TextView)view.findViewById(R.id.description);
             holder.imageView = (FadeInNetworkImageView)view.findViewById(R.id.thumbnail);
             //時間があったら投稿時間表示
@@ -52,6 +55,9 @@ public class FeedAdapter extends ArrayAdapter<Item> {
 
         holder.titleTextView.setText(item.getTitle());
         holder.descriptionTextView.setText(item.getDescription());
+        holder.likeCountTextView.setText(Integer.toString(item.getStampCount()[0]));
+        holder.questionCountTextView.setText(Integer.toString(item.getStampCount()[1]));
+        holder.dislikeCountTextView.setText(Integer.toString(item.getStampCount()[2]));
 
         holder.imageView.setImageUrl(item.getImage(), new ImageLoader(mQueue, new BitmapCache()));
         
@@ -66,6 +72,9 @@ public class FeedAdapter extends ArrayAdapter<Item> {
     	FadeInNetworkImageView imageView;
         TextView titleTextView;
         TextView descriptionTextView;
+        TextView likeCountTextView;
+        TextView questionCountTextView;
+        TextView dislikeCountTextView;
     }
 
 }
