@@ -9,6 +9,7 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONObject;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -128,8 +129,10 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-        float x = comment.getX() * mLayout.getWidth() / 100;
-        float y = comment.getY() * mLayout.getHeight() / 100;
+        int size = mLayout.getWidth();
+        float x = comment.getX() * size / 100;
+        float y = comment.getY() * size / 100;
+        // float y = comment.getY() * mLayout.getHeight() / 100;
         params.leftMargin = (int)x;
         params.topMargin = (int)y;
 
