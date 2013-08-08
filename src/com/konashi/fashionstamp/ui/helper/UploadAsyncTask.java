@@ -92,10 +92,11 @@ public class UploadAsyncTask extends AsyncTask<MultipartEntity, Integer, String>
             if (context.getClass() == ItemShowActivity.class) {
                 ItemShowActivity activity = (ItemShowActivity)context;
                 JSONObject jsonObj = new JSONObject(result);
+                Comment comment = Feed.parseComment(jsonObj);
                 
-                activity.drawComment(new Comment());
-                
+                activity.drawComment(comment);
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

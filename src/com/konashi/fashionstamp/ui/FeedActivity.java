@@ -330,9 +330,8 @@ public class FeedActivity extends FragmentActivity {
     private void wakeUpCrop(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         
-        // Crop to 200 * 200
-        intent.putExtra("outputX", 200);
-        intent.putExtra("outputY", 200);
+        intent.putExtra("outputX", 600);
+        intent.putExtra("outputY", 600);
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
         intent.putExtra("scale", true);
