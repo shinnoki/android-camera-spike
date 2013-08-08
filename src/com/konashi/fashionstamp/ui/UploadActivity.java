@@ -10,6 +10,7 @@ import org.apache.http.entity.mime.content.StringBody;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,9 +39,12 @@ public class UploadActivity extends Activity implements OnClickListener {
         Button upButton = (Button)findViewById(R.id.button1);
         upButton.setOnClickListener(this);
 
-        Intent i = getIntent();
-        Bitmap img = (Bitmap)i.getParcelableExtra("image");
-        imgView.setImageBitmap(img);
+        Intent intent = getIntent();
+        // Bitmap img = (Bitmap)intent.getParcelableExtra("image");
+        // imgView.setImageBitmap(img);
+        Uri imageUri = (Uri)intent.getParcelableExtra("imageUri");
+        imgView.setImageURI(imageUri);
+                
     }
     
     @Override

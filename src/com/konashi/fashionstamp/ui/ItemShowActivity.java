@@ -194,16 +194,16 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         
         ImageView imgview = (ImageView)view.findViewById(R.id.stamp);
         switch (comment.getStamp()) {
-        case 1:
-            imgview.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_star)); break;
-        case 2:
-            imgview.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_help));
-            imgview.setBackgroundColor(Color.argb(88, 0, 191, 255));
-            break;
-        case 3:
-            imgview.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_start_conversation));
-            imgview.setBackgroundColor(Color.argb(88, 255, 51, 153));
-            break;
+            case 1:
+                imgview.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_star)); break;
+            case 2:
+                imgview.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_help));
+                imgview.setBackgroundColor(Color.argb(88, 0, 191, 255));
+                break;
+            case 3:
+                imgview.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_start_conversation));
+                imgview.setBackgroundColor(Color.argb(88, 255, 51, 153));
+                break;
         }
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
@@ -260,6 +260,17 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
                 if (mCommentEdit == null) {
                     mCommentEdit = this.getLayoutInflater().inflate(R.layout.comment_edit, null);
                     mLayout.addView(mCommentEdit);
+                    
+                    // set stamp
+                    ImageView editStamp = (ImageView)mCommentEdit.findViewById(R.id.editStamp);
+                    switch (mStamp) {
+                    case 1:
+                        editStamp.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_star)); break;
+                    case 2:
+                        editStamp.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_help)); break;
+                    case 3:
+                        editStamp.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_start_conversation)); break;
+                    }
 
                     EditText editText = (EditText)mCommentEdit.findViewById(R.id.editBody);
 
