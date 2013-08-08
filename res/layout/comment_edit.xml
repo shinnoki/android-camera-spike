@@ -6,6 +6,7 @@
     android:background="@drawable/comment_body_background" >
     
     <ImageView 
+        android:id="@+id/editStamp"
         android:src="@drawable/ic_menu_star"
         android:layout_width="18dp"
         android:layout_height="18dp"
