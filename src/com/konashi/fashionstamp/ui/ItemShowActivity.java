@@ -101,6 +101,23 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
                     @Override
                     public void onResponse(JSONObject response) {
                         mItem = Feed.parseItem(response);
+                        
+                        TextView titleView = (TextView)findViewById(R.id.item_title);
+                        titleView.setText(mItem.getTitle());
+                        
+                        TextView descrptionView = (TextView)findViewById(R.id.item_description);
+                        descrptionView.setText(mItem.getDescription());
+                        
+                        int[] stampCount = mItem.getStampCount();
+                        TextView likeView = (TextView)findViewById(R.id.flag_like);
+                        likeView.setText(Integer.toString(stampCount[0]));
+                        TextView questionView = (TextView)findViewById(R.id.flag_question);
+                        questionView.setText(Integer.toString(stampCount[1]));
+                        TextView dislikeView = (TextView)findViewById(R.id.flag_dislike);
+                        dislikeView.setText(Integer.toString(stampCount[2]));
+                        TextView allView = (TextView)findViewById(R.id.flag_all);
+                        allView.setText(Integer.toString(stampCount[0]+stampCount[1]+stampCount[2]));
+
                         NetworkImageView itemImg = (NetworkImageView)findViewById(R.id.itemImageView);
                         itemImg.setImageUrl(mItem.getImage(), new ImageLoader(mQueue, new BitmapCache()));
                         drawComments(mItem.getComments());
