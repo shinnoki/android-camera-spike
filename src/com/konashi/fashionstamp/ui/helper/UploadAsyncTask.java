@@ -21,8 +21,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.konashi.fashionstamp.entity.Comment;
 import com.konashi.fashionstamp.entity.Item;
 import com.konashi.fashionstamp.model.Feed;
+import com.konashi.fashionstamp.ui.ItemShowActivity;
 import com.konashi.fashionstamp.ui.UploadActivity;
 
 public class UploadAsyncTask extends AsyncTask<MultipartEntity, Integer, String> {
@@ -85,6 +87,14 @@ public class UploadAsyncTask extends AsyncTask<MultipartEntity, Integer, String>
                 data.putExtra("item", item);
                 activity.setResult(Activity.RESULT_OK, data);
                 activity.finish();
+            }
+            
+            if (context.getClass() == ItemShowActivity.class) {
+                ItemShowActivity activity = (ItemShowActivity)context;
+                JSONObject jsonObj = new JSONObject(result);
+                
+                activity.drawComment(new Comment());
+                
             }
         } catch (JSONException e) {
             e.printStackTrace();

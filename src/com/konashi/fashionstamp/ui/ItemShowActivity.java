@@ -2,19 +2,20 @@ package com.konashi.fashionstamp.ui;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONObject;
 
-import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -44,6 +45,13 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
     private RequestQueue mQueue;
     private Item mItem;
     private int mItemId;
+    
+    private View mCommentEdit = null;
+    private float mCommentX;
+    private float mCommentY;
+    
+    private List<View> commentViews = new ArrayList<View>();
+    private boolean isCommentVisible = true;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,43 +94,81 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
 		getMenuInflater().inflate(R.menu.show_item, menu);
 		return true;
 	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_visible) {
+		    if (isCommentVisible) {
+    			setCommentsVisiblity(View.INVISIBLE);
+    			isCommentVisible = false;
+		    } else {
+		        setCommentsVisiblity(View.VISIBLE);
+		        isCommentVisible = true;
+		    }
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
     
     private void drawComments(List<Comment> comments) {
         for (Comment comment : comments) {
-            View view = this.getLayoutInflater().inflate(R.layout.comment, null);
-            
-            TextView textView = (TextView)view.findViewById(R.id.body);
-            textView.setText(comment.getBody());
-
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            
-            float x = comment.getX() * mLayout.getWidth() / 100;
-            float y = comment.getY() * mLayout.getHeight() / 100;
-            params.leftMargin = (int)x;
-            params.topMargin = (int)y;
-            mLayout.addView(view, params);
+            drawComment(comment);
         }
+    }
+    
+    public void drawComment(Comment comment) {
+        View view = this.getLayoutInflater().inflate(R.layout.comment, null);
+
+        TextView textView = (TextView)view.findViewById(R.id.body);
+        textView.setText(comment.getBody());
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        float x = comment.getX() * mLayout.getWidth() / 100;
+        float y = comment.getY() * mLayout.getHeight() / 100;
+        params.leftMargin = (int)x;
+        params.topMargin = (int)y;
+
+        mLayout.addView(view, params);
+        commentViews.add(view);
+    }
+    
+    private void setCommentsVisiblity(int visiblity) {
+        for (View v : commentViews) {
+            v.setVisibility(visiblity);
+        }
+        
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int action = event.getAction();
+
         int touchX = (int)event.getX();
         int touchY = (int)event.getY();
 
         if (action == MotionEvent.ACTION_DOWN) {
-            View commentEdit = this.getLayoutInflater().inflate(R.layout.comment_edit, null);
+            if (mCommentEdit != null) {
+                mLayout.removeView(mCommentEdit);
+            }
+
+            mCommentEdit = this.getLayoutInflater().inflate(R.layout.comment_edit, null);
             
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
+
             params.leftMargin = touchX;
             params.topMargin = touchY;
-            mLayout.addView(commentEdit, params);
 
-            EditText editText = (EditText)commentEdit.findViewById(R.id.editBody);
+            mCommentX = touchX;
+            mCommentY = touchY;
+
+            mLayout.addView(mCommentEdit, params);
+
+            EditText editText = (EditText)mCommentEdit.findViewById(R.id.editBody);
 
             // Move focus to edit text and open softkeyboard
             editText.requestFocus();
@@ -138,14 +184,11 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
                         ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
                         v.setFocusable(false);
 
-                        int[] pEdit = new int[2];
-                        v.getLocationOnScreen(pEdit);
-                        int[] pLayout = new int[2];
-                        mLayout.getLocationOnScreen(pLayout);
+                        float x = mCommentX / mLayout.getWidth() * 100;
+                        float y = mCommentY / mLayout.getHeight() * 100;
 
-                        float x = (float)(pEdit[0] - pLayout[0]) * mLayout.getWidth() / 100;
-                        float y = (float)(pEdit[1] - pLayout[1]) * mLayout.getHeight() / 100;
                         submitComment(1, x, y, v.getText().toString());
+                        mLayout.removeView(mCommentEdit);
 
                         return true;
                     }
