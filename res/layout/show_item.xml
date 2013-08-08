@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -7,15 +7,14 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="match_parent" >
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/itemImageView"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitXY"
+            android:src="@drawable/loading" />
 
         <RelativeLayout
             android:id="@+id/rLayout"
@@ -27,7 +26,37 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:background="#eee" >
+        android:background="#eee"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+     
+
+        <ToggleButton
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_menu_star"
+            android:drawablePadding="5dp"/>
+
+        <ToggleButton
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" 
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_menu_star"/>
+
+        <ToggleButton
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" 
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_menu_star"/>
+        
+        <ToggleButton
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textOff="ALL OFF"
+            android:textOn="ALL ON"
+             />
     </LinearLayout>
 
     <!--
@@ -51,4 +80,4 @@
 	</LinearLayout>
     -->
 
-</LinearLayout>
+</RelativeLayout>
