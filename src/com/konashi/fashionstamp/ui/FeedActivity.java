@@ -262,12 +262,11 @@ public class FeedActivity extends FragmentActivity {
         }
         
         if (requestCode == REQUEST_CROP) {
-                Bitmap img = data.getParcelableExtra("data");
+                // Bitmap img = data.getParcelableExtra("data");
 
                 Intent intent = new Intent(this, UploadActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("image", img);
-                intent.putExtras(bundle);
+                // intent.putExtra("image", img);
+                intent.putExtra("imageUri", mSaveUri);
                 startActivityForResult(intent, REQUEST_UPLOAD);
         }
         
@@ -344,15 +343,14 @@ public class FeedActivity extends FragmentActivity {
  
         Intent intent = new Intent("com.android.camera.action.CROP");
         
-        intent.putExtra("outputX", 200);
-        intent.putExtra("outputY", 200);
+        intent.putExtra("outputX", 600);
+        intent.putExtra("outputY", 600);
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
         intent.putExtra("scale", true);
-        intent.putExtra("return-data", true);
 
-        // mSaveUri = generateSaveUri();
-        // intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);
+        mSaveUri = generateSaveUri();
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);
        
         intent.setData(uri);
         startActivityForResult(intent, REQUEST_CROP);
