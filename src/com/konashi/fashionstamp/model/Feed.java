@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.konashi.fashionstamp.entity.Comment;
 import com.konashi.fashionstamp.entity.Item;
 
@@ -69,6 +70,22 @@ public class Feed {
 			}
 		}
 		return comments;
+	}
+	
+	public static Comment parseComment(JSONObject jsonComment) {
+			Comment comment = new Comment();
+			try {
+				comment.setBody(jsonComment.getString("body"));
+				comment.setX((float) jsonComment.getDouble("x"));
+				comment.setY((float) jsonComment.getDouble("y"));
+				comment.setCreatedAt(jsonComment.getString("created_at"));
+				int stampId = jsonComment.getInt("stamp");
+				comment.setStamp(stampId);
+			} catch (JSONException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
+			return comment;
 	}
 
 	private static int[] countStamp(ArrayList<Comment> comments){

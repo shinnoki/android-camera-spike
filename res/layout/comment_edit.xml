@@ -17,6 +17,8 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_menu_star"
         android:background="@drawable/comment_body_background"
+        android:textCursorDrawable="@null"
+        android:paddingRight="6dp"
         android:inputType="text"
         android:imeOptions="actionSend" 
         android:textColor="#fff" />

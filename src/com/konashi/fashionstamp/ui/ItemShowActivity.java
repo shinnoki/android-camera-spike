@@ -150,51 +150,53 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
         int touchY = (int)event.getY();
 
         if (action == MotionEvent.ACTION_DOWN) {
-            if (mCommentEdit != null) {
-                mLayout.removeView(mCommentEdit);
+            if (mCommentEdit == null) {
+                mCommentEdit = this.getLayoutInflater().inflate(R.layout.comment_edit, null);
+                mLayout.addView(mCommentEdit);
+
+                EditText editText = (EditText)mCommentEdit.findViewById(R.id.editBody);
+    
+                // Move focus to edit text and open softkeyboard
+                editText.requestFocus();
+                InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);  
+                inputMethodManager.showSoftInput(editText, 0);  
+                
+                // Set event when input finished
+                editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_SEND) {
+                            // close softkeyboard
+                            ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
+                            v.setFocusable(false);
+    
+                            float x = mCommentX / mLayout.getWidth() * 100;
+                            float y = mCommentY / mLayout.getHeight() * 100;
+    
+                            submitComment(1, x, y, v.getText().toString());
+                            mLayout.removeView(mCommentEdit);
+    
+                            return true;
+                        }
+                        return false;
+                    }
+                });
             }
 
-            mCommentEdit = this.getLayoutInflater().inflate(R.layout.comment_edit, null);
             
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
+            mCommentEdit.setLayoutParams(params);
 
             params.leftMargin = touchX;
             params.topMargin = touchY;
 
             mCommentX = touchX;
             mCommentY = touchY;
-
-            mLayout.addView(mCommentEdit, params);
-
-            EditText editText = (EditText)mCommentEdit.findViewById(R.id.editBody);
-
-            // Move focus to edit text and open softkeyboard
-            editText.requestFocus();
-            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);  
-            inputMethodManager.showSoftInput(editText, 0);  
             
-            // Set event when input finished
-            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_SEND) {
-                        // close softkeyboard
-                        ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
-                        v.setFocusable(false);
 
-                        float x = mCommentX / mLayout.getWidth() * 100;
-                        float y = mCommentY / mLayout.getHeight() * 100;
 
-                        submitComment(1, x, y, v.getText().toString());
-                        mLayout.removeView(mCommentEdit);
-
-                        return true;
-                    }
-                    return false;
-                }
-            });
          
         }
 
