@@ -30,6 +30,7 @@
         <activity
             android:name="com.konashi.fashionstamp.ui.FeedActivity"
             android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboard"
             android:label="@string/title_activity_feed" >
                         <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

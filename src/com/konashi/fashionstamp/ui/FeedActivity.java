@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -15,7 +16,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
+import android.media.MediaScannerConnection;
+import android.media.MediaScannerConnection.OnScanCompletedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,6 +31,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.camerastamp.R;
 import com.konashi.fashionstamp.entity.Item;
@@ -51,6 +54,8 @@ public class FeedActivity extends FragmentActivity {
 	private CharSequence mTitle;
 	private CharSequence mDrawerTitle;
 	private ActionBarDrawerToggle mDrawerToggle;
+	
+	private ProgressDialog dialog;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -226,44 +231,44 @@ public class FeedActivity extends FragmentActivity {
         if (resultCode != RESULT_OK) return;
 
         if (requestCode == REQUEST_CAMERA) {
-            wakeUpCrop(mSaveUri);
+            dialog = new ProgressDialog(this);
+            dialog.setTitle("Please wait");
+            dialog.setMessage("Saving Image...");
+            dialog.show();
+
+            Cursor c = getContentResolver().query(mSaveUri, null, null, null, null);
+            c.moveToFirst();
+            String filename = c.getString(c.getColumnIndex(MediaStore.MediaColumns.DATA));
+            MediaScannerConnection.scanFile(this, new String[]{filename}, new String[]{"image/jpeg"}, new OnScanCompletedListener() {
+                @Override
+                public void onScanCompleted(String path, Uri uri) {
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+
+                    if (uri != null) {
+                        wakeUpCrop(uri);
+                    } else {
+                        Toast.makeText(FeedActivity.this, "写真の保存に失敗しました", Toast.LENGTH_LONG).show();;
+                    }
+                }
+            });
             // wakeUpUploadActivity(mSaveUri);
         }
 
         if (requestCode == REQUEST_GALLERY) {
-            // wakeUpCrop(data.getData());
+            wakeUpCrop(data.getData());
             /// wakeUpUploadActivity(data.getData());
         }
         
         if (requestCode == REQUEST_CROP) {
-            try {
-                InputStream is = getContentResolver().openInputStream(data.getData());
-                Bitmap img = BitmapFactory.decodeStream(is);
-                is.close();
-    
-                Bundle b = new Bundle();
-                b.putParcelable("image", img);
-                Intent i = new Intent(this, UploadActivity.class);
-                i.putExtras(b);
-                startActivityForResult(i, REQUEST_UPLOAD);
-                
-            } catch(Exception e) {
-                
-            }
-
-            /*
-            Bundle ext = data.getExtras();
-
-            if (ext != null) {
-                Bitmap img = ext.getParcelable("data");
+                Bitmap img = data.getParcelableExtra("data");
 
                 Intent intent = new Intent(this, UploadActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("image", img);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_UPLOAD);
-            }
-            */
         }
         
         if (requestCode == REQUEST_UPLOAD) {
@@ -289,7 +294,7 @@ public class FeedActivity extends FragmentActivity {
     private void wakeUpGallery() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        intent.putExtra("crop", "true");
+        // intent.putExtra("crop", "true");
         startActivityForResult(intent, REQUEST_GALLERY);
     }
     
@@ -336,17 +341,18 @@ public class FeedActivity extends FragmentActivity {
     }
     
     private void wakeUpCrop(Uri uri) {
-        mSaveUri = generateSaveUri();
  
         Intent intent = new Intent("com.android.camera.action.CROP");
         
-        intent.putExtra("outputX", 600);
-        intent.putExtra("outputY", 600);
+        intent.putExtra("outputX", 200);
+        intent.putExtra("outputY", 200);
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
         intent.putExtra("scale", true);
-        intent.putExtra("return-data", false);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);
+        intent.putExtra("return-data", true);
+
+        // mSaveUri = generateSaveUri();
+        // intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);
        
         intent.setData(uri);
         startActivityForResult(intent, REQUEST_CROP);
@@ -366,28 +372,4 @@ public class FeedActivity extends FragmentActivity {
         return contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
     }
     
-    private int getRotateDegree(String filePath)
-    {
-        int degree = 0;
-        try {
-            ExifInterface exifInterface = new ExifInterface(filePath);
-            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-                degree = 90;
-            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
-                degree = 180;
-            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-                degree = 270;
-            }
-            if (degree != 0) {
-                exifInterface.setAttribute(ExifInterface.TAG_ORIENTATION, "0");
-                exifInterface.saveAttributes();
-            }
-        } catch (IOException e) {
-            degree = -1;
-            e.printStackTrace();
-        }
-     
-        return degree;
-    }
 }
