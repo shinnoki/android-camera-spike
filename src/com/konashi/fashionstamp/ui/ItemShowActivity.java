@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -99,10 +101,10 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_visible) {
 		    if (isCommentVisible) {
-    			setCommentsVisiblity(View.INVISIBLE);
+    			setCommentsVisiblity(false);
     			isCommentVisible = false;
 		    } else {
-		        setCommentsVisiblity(View.VISIBLE);
+		        setCommentsVisiblity(true);
 		        isCommentVisible = true;
 		    }
 		}
@@ -135,11 +137,19 @@ public class ItemShowActivity extends Activity implements OnTouchListener {
         commentViews.add(view);
     }
     
-    private void setCommentsVisiblity(int visiblity) {
-        for (View v : commentViews) {
-            v.setVisibility(visiblity);
+    private void setCommentsVisiblity(boolean visible) {
+        if (visible)
+        {
+            for (View v : commentViews) {
+                Animation animation= AnimationUtils.loadAnimation(this,R.anim.fade_in_comment);
+                v.startAnimation(animation);
+            }
+        } else {
+            for (View v : commentViews) {
+                Animation animation= AnimationUtils.loadAnimation(this,R.anim.fade_out_comment);
+                v.startAnimation(animation);
+            }
         }
-        
     }
 
     @Override
