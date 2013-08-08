@@ -74,6 +74,10 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
     private List<View> questionViews = new ArrayList<View>();
     private List<View> dislikeViews = new ArrayList<View>();
     
+    private TextView mLikeView;
+    private TextView mQuestionView;
+    private TextView mDislikeView;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,12 +133,15 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
                         descrptionView.setText(mItem.getDescription());
                         
                         int[] stampCount = mItem.getStampCount();
-                        TextView likeView = (TextView)findViewById(R.id.flag_like);
-                        likeView.setText(Integer.toString(stampCount[0]));
-                        TextView questionView = (TextView)findViewById(R.id.flag_question);
-                        questionView.setText(Integer.toString(stampCount[1]));
-                        TextView dislikeView = (TextView)findViewById(R.id.flag_dislike);
-                        dislikeView.setText(Integer.toString(stampCount[2]));
+                        mLikeView = (TextView)findViewById(R.id.flag_like);
+                        mLikeView.setText(Integer.toString(stampCount[0]));
+                        
+                        mQuestionView = (TextView)findViewById(R.id.flag_question);
+                        mQuestionView.setText(Integer.toString(stampCount[1]));
+                        
+                        mDislikeView = (TextView)findViewById(R.id.flag_dislike);
+                        mDislikeView.setText(Integer.toString(stampCount[2]));
+                        
                         TextView allView = (TextView)findViewById(R.id.flag_all);
                         allView.setText(Integer.toString(stampCount[0]+stampCount[1]+stampCount[2]));
 
@@ -334,7 +341,23 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
 
             String url = "http://still-ocean-5133.herokuapp.com/comments.json";
             new UploadAsyncTask(this, url).execute(entity);
+            
+            switch (stamp) {
+			case 1:
+				addStampCount(mLikeView);
+				break;
+				
+			case 2:
+				addStampCount(mQuestionView);
+				break;
+				
+			case 3:
+				addStampCount(mDislikeView);
+				break;
 
+			default:
+				break;
+			}
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -376,6 +399,11 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         } else {
             super.onBackPressed();
         }
+    }
+    
+    public void addStampCount(TextView textView){
+    	int count = Integer.valueOf((String) textView.getText());
+    	textView.setText(Integer.toString(++count));
     }
     
 }
