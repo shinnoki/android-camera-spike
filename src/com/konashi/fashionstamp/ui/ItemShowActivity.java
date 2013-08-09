@@ -457,13 +457,13 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
     
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-      if(keyCode==KeyEvent.KEYCODE_BACK){
-          if (mStamp != 0) {
+      if(keyCode==KeyEvent.KEYCODE_BACK && mStamp != 0){
               setStamp(0);
               return true;
-          }
+      } else {
+          return super.onKeyDown(keyCode, event);
+          
       }
-      return false;
     }
             
 }
