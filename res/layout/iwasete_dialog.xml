@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+           android:layout_width="fill_parent"
+           android:layout_height="50dp"
+           android:background="#eee"
+           android:orientation="horizontal" >
+           
+           <Button
+               android:id="@+id/iwasete_like"
+               android:layout_width="fill_parent"
+               android:layout_height="fill_parent"
+               android:layout_weight="1"
+               android:background="#44FFD700"
+               android:text="褒メ\nサセテ！"
+               android:drawableTop="@drawable/ic_menu_star" />
+
+           <Button
+               android:id="@+id/iwasete_question"
+               android:layout_width="fill_parent"
+               android:layout_height="fill_parent"
+               android:layout_weight="1"
+               android:background="#4400bfff"
+               android:text="質問\nサセテ！"
+               android:drawableTop="@drawable/ic_menu_help" />
+
+           <Button
+               android:id="@+id/iwasete_dislike"
+               android:layout_width="fill_parent"
+               android:layout_height="fill_parent"
+               android:layout_weight="1"
+               android:background="#44ff3399"
+               android:text="物申\nサセテ！"
+               android:drawableTop="@drawable/ic_menu_start_conversation" />
+
+</LinearLayout>

@@ -63,6 +63,7 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
     private ToggleButton mtb_all;
     
     private Button iwaseteButton;
+    private AlertDialog iwaseteDlg;
     
     private View mCommentEdit = null;
     private float mCommentX;
@@ -105,7 +106,6 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         
         iwaseteButton = (Button)findViewById(R.id.iwaseteButton);
         iwaseteButton.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				selectStamp();
@@ -153,6 +153,37 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
     }
 
 	private void selectStamp() {
+	    View iwaseteView = (View)getLayoutInflater().inflate(R.layout.iwasete_dialog, null);
+
+	    Button iwasete_like = (Button)iwaseteView.findViewById(R.id.iwasete_like);
+	    iwasete_like.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setStamp(1); 
+            }
+        });
+	    Button iwasete_question = (Button)iwaseteView.findViewById(R.id.iwasete_question);
+	    iwasete_question.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setStamp(2); 
+            }
+        });
+	    Button iwasete_dislike = (Button)iwaseteView.findViewById(R.id.iwasete_dislike);
+	    iwasete_dislike.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setStamp(3); 
+            }
+        });
+	    
+	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("あなたの気持ちを選択！");
+        builder.setView(iwaseteView);
+        iwaseteDlg = builder.show();
+
+
+	    /*
 		String[] items = { "褒メサセテ！", "質問サセテ！", "物申サセテ！" };
 
 		new AlertDialog.Builder(this).setItems(items,
@@ -165,19 +196,27 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
                         break;
                     case 1: 
                         setStamp(2); 
+                        iwaseteButton.setPressed(true);
+                        // iwaseteButton.setBackgroundColor(Color.rgb(0, 191, 255));
                         Toast.makeText(getApplicationContext(), "写真の質問したい所をクリック", Toast.LENGTH_LONG).show();
                         break;
                     case 2:
                         setStamp(3); 
+                        iwaseteButton.setPressed(true);
+                        // iwaseteButton.setBackgroundColor(Color.rgb(255, 51, 153));
                         Toast.makeText(getApplicationContext(), "写真の物申したい所をクリック", Toast.LENGTH_LONG).show();
                         break;
 		        }
 		    }
 		}).show();
+		*/
 	}
 
 	private void setStamp(int stamp) {
 	    mStamp = stamp;
+	    String[] messages = { "", "写真の褒めたい所をタッチ！", "写真の質問したい所をタッチ！" , "写真の物申したい所をタッチ！" };
+        Toast.makeText(getApplicationContext(), messages[stamp], Toast.LENGTH_LONG).show();
+        if (iwaseteDlg != null) iwaseteDlg.dismiss();
     }
     
     private void drawComments(List<Comment> comments) {
@@ -338,7 +377,6 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
     }
     
     @Override
