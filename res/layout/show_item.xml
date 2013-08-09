@@ -62,10 +62,8 @@
                     android:text="入力中…"
                     android:visibility="invisible"
                     android:layout_gravity="center_horizontal"
-                    android:textColor="#fff"
                     android:paddingLeft="6dp"
-                    android:paddingRight="6dp"
-                    android:background="#22222222"/>
+                    android:paddingRight="6dp" />
                 
             </LinearLayout>
         </LinearLayout>

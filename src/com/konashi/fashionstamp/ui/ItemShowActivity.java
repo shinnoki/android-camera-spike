@@ -206,15 +206,15 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
 	        switch (stamp) {
             case 1:
     	        Toast.makeText(getApplicationContext(), "写真の褒めたい所をタッチ！", Toast.LENGTH_LONG).show();
-    	        modeView.setTextColor(Color.YELLOW);
+    	        modeView.setBackgroundColor(Color.argb(88, 255, 215, 0));
                 break;
             case 2:
     	        Toast.makeText(getApplicationContext(), "写真の質問したいところをタッチ！", Toast.LENGTH_LONG).show();
-    	        modeView.setTextColor(Color.BLUE);
+                modeView.setBackgroundColor(Color.argb(88, 0, 191, 255));
     	        break;
             case 3:
     	        Toast.makeText(getApplicationContext(), "写真の物申したいところをタッチ！", Toast.LENGTH_LONG).show();
-    	        modeView.setTextColor(Color.RED);
+                modeView.setBackgroundColor(Color.argb(88, 255, 51, 153));
     	        break;
             }
 	        modeView.setVisibility(View.VISIBLE);
@@ -250,7 +250,9 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         ImageView imgview = (ImageView)view.findViewById(R.id.stamp);
         switch (comment.getStamp()) {
             case 1:
-                imgview.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_star)); break;
+                imgview.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_star));
+    	        imgview.setBackgroundColor(Color.argb(88, 255, 215, 0));
+    	        break;
             case 2:
                 imgview.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_help));
                 imgview.setBackgroundColor(Color.argb(88, 0, 191, 255));
