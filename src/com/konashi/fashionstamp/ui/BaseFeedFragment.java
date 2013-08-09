@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -45,6 +46,12 @@ public class BaseFeedFragment extends Fragment {
 		mListView = (ListView)getView().findViewById(R.id.listView);
 		mRequestUrl = getArguments().getString("requestUrl");
 		mFeedList = new ArrayList<Item>();
+		
+		ProgressDialog dialog = new ProgressDialog(getActivity());
+        dialog.setTitle("通信中");
+        dialog.setMessage("Now Loading...");
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.show();
 		
 		mQueue = Volley.newRequestQueue(getActivity());
 		JsonArrayRequest req = new JsonArrayRequest(mRequestUrl,
