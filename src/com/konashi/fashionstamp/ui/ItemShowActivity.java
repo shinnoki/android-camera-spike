@@ -408,6 +408,8 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
 			default:
 				break;
 			}
+            setStamp(0);
+            
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
