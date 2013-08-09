@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -65,7 +66,7 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
     private Button iwaseteButton;
     private AlertDialog iwaseteDlg;
     
-    private View mCommentEdit = null;
+    private View mCommentEdit;
     private float mCommentX;
     private float mCommentY;
     
@@ -188,42 +189,50 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         builder.setTitle("あなたの気持ちを選択！");
         builder.setView(iwaseteView);
         iwaseteDlg = builder.show();
-
-
-	    /*
-		String[] items = { "褒メサセテ！", "質問サセテ！", "物申サセテ！" };
-
-		new AlertDialog.Builder(this).setItems(items,
-		        new DialogInterface.OnClickListener() {
-		    public void onClick(DialogInterface dialog, int item) {
-		        switch (item) {
-                    case 0:
-                        setStamp(1); 
-                        Toast.makeText(getApplicationContext(), "写真の褒めたい所をクリック", Toast.LENGTH_LONG).show();
-                        break;
-                    case 1: 
-                        setStamp(2); 
-                        iwaseteButton.setPressed(true);
-                        // iwaseteButton.setBackgroundColor(Color.rgb(0, 191, 255));
-                        Toast.makeText(getApplicationContext(), "写真の質問したい所をクリック", Toast.LENGTH_LONG).show();
-                        break;
-                    case 2:
-                        setStamp(3); 
-                        iwaseteButton.setPressed(true);
-                        // iwaseteButton.setBackgroundColor(Color.rgb(255, 51, 153));
-                        Toast.makeText(getApplicationContext(), "写真の物申したい所をクリック", Toast.LENGTH_LONG).show();
-                        break;
-		        }
-		    }
-		}).show();
-		*/
 	}
 
 	private void setStamp(int stamp) {
 	    mStamp = stamp;
-	    String[] messages = { "", "写真の褒めたい所をタッチ！", "写真の質問したい所をタッチ！" , "写真の物申したい所をタッチ！" };
-        Toast.makeText(getApplicationContext(), messages[stamp], Toast.LENGTH_LONG).show();
-        if (iwaseteDlg != null) iwaseteDlg.dismiss();
+        TextView modeView = (TextView)findViewById(R.id.mode);
+	    
+	    if (stamp == 0) {
+	        modeView.setVisibility(View.INVISIBLE);
+	        if (mCommentEdit != null) {
+	            mLayout.removeView(mCommentEdit);
+	            mCommentEdit = null;
+	        }
+	        
+	    } else {
+	        switch (stamp) {
+            case 1:
+    	        Toast.makeText(getApplicationContext(), "写真の褒めたい所をタッチ！", Toast.LENGTH_LONG).show();
+    	        modeView.setTextColor(Color.YELLOW);
+                break;
+            case 2:
+    	        Toast.makeText(getApplicationContext(), "写真の質問したいところをタッチ！", Toast.LENGTH_LONG).show();
+    	        modeView.setTextColor(Color.BLUE);
+    	        break;
+            case 3:
+    	        Toast.makeText(getApplicationContext(), "写真の物申したいところをタッチ！", Toast.LENGTH_LONG).show();
+    	        modeView.setTextColor(Color.RED);
+    	        break;
+            }
+	        modeView.setVisibility(View.VISIBLE);
+
+	        if (iwaseteDlg != null) iwaseteDlg.dismiss();
+
+	        if (mCommentEdit != null) {
+	            ImageView editStamp = (ImageView)mCommentEdit.findViewById(R.id.editStamp);
+	            switch (mStamp) {
+	            case 1:
+	                editStamp.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_star)); break;
+	            case 2:
+	                editStamp.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_help)); break;
+	            case 3:
+	                editStamp.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_start_conversation)); break;
+	            }
+	        }
+	    }
     }
     
     private void drawComments(List<Comment> comments) {
@@ -444,4 +453,15 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
     	textView.setText(Integer.toString(++count));
     }
     
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+      if(keyCode==KeyEvent.KEYCODE_BACK){
+          if (mStamp != 0) {
+              setStamp(0);
+              return true;
+          }
+      }
+      return false;
+    }
+            
 }
