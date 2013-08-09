@@ -80,6 +80,8 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
     private TextView mQuestionView;
     private TextView mDislikeView;
     
+    private float mScale;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +95,8 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
         if(isFirstBoot){
         	Toast.makeText(getApplicationContext(), "↓重なって見づらい時は非表示で快適に", Toast.LENGTH_LONG).show();
         }
+        
+        mScale = getResources().getDisplayMetrics().density;
         
         setTitle(mItem.getTitle());
         
@@ -309,8 +313,8 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
     public boolean onTouch(View v, MotionEvent event) {
         int action = event.getAction();
 
-        int touchX = (int)event.getX();
-        int touchY = (int)event.getY();
+        int touchX = (int)(event.getX() - 8.0f * mScale);
+        int touchY = (int)(event.getY() - 12.0f * mScale);
 
         if (action == MotionEvent.ACTION_DOWN) {
             if (mStamp != 0) {
@@ -379,6 +383,7 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
     
     private void submitComment(int stamp, float x, float y, String body) {
         try {
+            y = y + 0.7f * mScale;
             MultipartEntity entity = new MultipartEntity() ;
 
             entity.addPart("comment[item_id]", new StringBody(Integer.toString(mItem.getId())));
