@@ -35,6 +35,8 @@ public class BaseFeedFragment extends Fragment {
 	
 	protected Boolean mIsFirstBoot = true;
 	
+	ProgressDialog dialog;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,7 +49,7 @@ public class BaseFeedFragment extends Fragment {
 		mRequestUrl = getArguments().getString("requestUrl");
 		mFeedList = new ArrayList<Item>();
 		
-		ProgressDialog dialog = new ProgressDialog(getActivity());
+		final ProgressDialog dialog = new ProgressDialog(getActivity());
         dialog.setTitle("通信中");
         dialog.setMessage("Now Loading...");
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -60,6 +62,7 @@ public class BaseFeedFragment extends Fragment {
 	                    mFeedList.addAll(Feed.parseFeedJson(response));
 	                    FeedAdapter mAdapter = new FeedAdapter(getActivity(), mFeedList);
 	                    mListView.setAdapter(mAdapter);
+	                    dialog.dismiss();
 	                    mListView.setOnItemClickListener(new OnItemClickListener() {
 
 							@Override
