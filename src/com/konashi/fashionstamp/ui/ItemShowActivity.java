@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -192,17 +193,34 @@ public class ItemShowActivity extends Activity implements OnTouchListener, OnChe
 
 	private void setStamp(int stamp) {
 	    mStamp = stamp;
+        TextView modeView = (TextView)findViewById(R.id.mode);
 	    
 	    if (stamp == 0) {
+	        modeView.setVisibility(View.INVISIBLE);
 	        if (mCommentEdit != null) {
 	            mLayout.removeView(mCommentEdit);
 	            mCommentEdit = null;
 	        }
 	        
 	    } else {
-	        String[] messages = { "", "写真の褒めたい所をタッチ！", "写真の質問したい所をタッチ！" , "写真の物申したい所をタッチ！" };
-	        Toast.makeText(getApplicationContext(), messages[stamp], Toast.LENGTH_LONG).show();
+	        switch (stamp) {
+            case 1:
+    	        Toast.makeText(getApplicationContext(), "写真の褒めたい所をタッチ！", Toast.LENGTH_LONG).show();
+    	        modeView.setTextColor(Color.YELLOW);
+                break;
+            case 2:
+    	        Toast.makeText(getApplicationContext(), "写真の質問したいところをタッチ！", Toast.LENGTH_LONG).show();
+    	        modeView.setTextColor(Color.BLUE);
+    	        break;
+            case 3:
+    	        Toast.makeText(getApplicationContext(), "写真の物申したいところをタッチ！", Toast.LENGTH_LONG).show();
+    	        modeView.setTextColor(Color.RED);
+    	        break;
+            }
+	        modeView.setVisibility(View.VISIBLE);
+
 	        if (iwaseteDlg != null) iwaseteDlg.dismiss();
+
 	        if (mCommentEdit != null) {
 	            ImageView editStamp = (ImageView)mCommentEdit.findViewById(R.id.editStamp);
 	            switch (mStamp) {
